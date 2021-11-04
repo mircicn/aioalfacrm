@@ -9,6 +9,11 @@
 
 ## Package is in development
 
+## Installation using pip
+```
+$ pip install aioalfacrm
+```
+
 *Example:*
 
 ```python
