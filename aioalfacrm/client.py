@@ -32,6 +32,8 @@ class AlfaClient:
         self._hostname = hostname
         self._branch_id = branch_id
         self._session = session
+        self._email = email
+        self._api_key = api_key
         self.auth_manager = AuthManager(
             email,
             api_key,
@@ -78,3 +80,19 @@ class AlfaClient:
     async def close(self):
         """Close connections"""
         await self._session.close()
+
+    @property
+    def hostname(self) -> str:
+        return self._hostname
+
+    @property
+    def email(self) -> str:
+        return self._email
+
+    @property
+    def api_key(self) -> str:
+        return self._api_key
+
+    @property
+    def branch_id(self) -> int:
+        return self._branch_id

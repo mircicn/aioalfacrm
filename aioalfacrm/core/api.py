@@ -40,4 +40,4 @@ class ApiClient:
         """
         headers = await self._auth_manager.get_auth_headers()
         async with self._session.post(url, json=json, params=params, headers=headers) as response:
-            return check_response(response.status, response.request_info, await response.text())
+            return check_response(response.status, await response.text(), response.request_info)

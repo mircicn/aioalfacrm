@@ -57,7 +57,7 @@ class AuthManager:
         }
         auth_url = make_url(self._hostname, 'auth/login')
         async with self._session.post(auth_url, json=payload) as response:
-            data = check_response(response.status, response.request_info, await response.text())
+            data = check_response(response.status, await response.text(), response.request_info)
             self._token = data['token']
             return Token(
                 value=data['token'],
@@ -72,15 +72,28 @@ class AuthManager:
         new_token = await self._get_token()
         self._token = new_token
 
+    async def get_token(self) -> Token:
+        """
+        Get token with auto refresh
+        :return:
+        """
+        # Update token if it expired
+        if self._token.is_expired():
+            await self.refresh_token()
+        return self._token
+
     async def get_auth_headers(self) -> typing.Dict[str, str]:
         """
         Make auth header
         :return: auth header
         """
 
-        # Update token if it expired
-        if self._token.is_expired():
-            await self.refresh_token()
+        token = await self.get_token()
+
         return {
-            AUTH_HEADER_FIELD: self._token.value
+            AUTH_HEADER_FIELD: token.value
         }
+
+    @property
+    def token(self) -> Token:
+        return self._token

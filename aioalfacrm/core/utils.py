@@ -20,7 +20,11 @@ def make_url(hostname: str, api_method: str, branch_id: int = 0) -> str:
         return f"https://{hostname}/v2api/{api_method}"
 
 
-def check_response(code: int, request_info: aiohttp.RequestInfo, body: str) -> typing.Dict[str, typing.Any]:
+def check_response(
+        code: int,
+        body: str,
+        request_info: typing.Optional[aiohttp.RequestInfo] = None
+) -> typing.Dict[str, typing.Any]:
     """
     Check response
     :param code: response code
@@ -29,7 +33,7 @@ def check_response(code: int, request_info: aiohttp.RequestInfo, body: str) -> t
     :return: checked response
     """
     if code >= 500:
-        raise ApiException(code, "Server error", request_info)
+        raise ApiException(code, body, request_info)
 
     try:
         json_response = json_.loads(body)
