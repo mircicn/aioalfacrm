@@ -1,6 +1,10 @@
 import aiohttp
 import pytest
-from asynctest import CoroutineMock, patch
+
+try:
+    from unittest.mock import AsyncMock as CoroutineMock, patch
+except ImportError:
+    from asynctest import CoroutineMock, patch
 
 from aioalfacrm import AlfaClient
 
