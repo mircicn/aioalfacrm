@@ -1,8 +1,6 @@
-import ssl
 import typing
 
 import aiohttp
-import certifi
 
 from .core.api import ApiClient
 from .core.auth import AuthManager
@@ -22,8 +20,6 @@ class AlfaClient:
             connections_limit: typing.Optional[int] = None,
             session: typing.Optional[aiohttp.ClientSession] = None,
     ):
-        ssl_context = ssl.create_default_context(cafile=certifi.where())
-        self._connector_init = dict(limit=connections_limit, ssl=ssl_context)
         self._connector_class: typing.Type[aiohttp.TCPConnector] = aiohttp.TCPConnector
 
         if session is None:
@@ -57,14 +53,13 @@ class AlfaClient:
         self.lead_status = LeadStatus(self.api_client)
         self.lead_source = LeadSource(self.api_client)
 
-    def _create_session(self) -> aiohttp.ClientSession:
+    @classmethod
+    def _create_session(cls) -> aiohttp.ClientSession:
         """
         Create session
         :return: session
         """
-        return aiohttp.ClientSession(
-            connector=self._connector_class(**self._connector_init),
-        )
+        return aiohttp.ClientSession()
 
     async def auth(self):
         await self.auth_manager.refresh_token()
