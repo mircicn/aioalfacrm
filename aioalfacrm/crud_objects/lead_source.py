@@ -1,9 +1,10 @@
 import typing
 
-from ..core.object_ import AlfaObject
+from .. import models
+from ..core.object_ import AlfaCRUDObject
 
 
-class LeadSource(AlfaObject):
+class LeadSource(AlfaCRUDObject):
     object_name = 'lead-source'
 
     async def list(
@@ -14,7 +15,7 @@ class LeadSource(AlfaObject):
             code: typing.Optional[str] = None,
             is_enabled: typing.Optional[bool] = None,
             **kwargs,
-    ):
+    ) -> typing.List[models.LeadSource]:
         """
         Get list customers
         :param page: page
@@ -25,7 +26,7 @@ class LeadSource(AlfaObject):
         :param kwargs: additional filters
         :return: list of branches
         """
-        return await self._list(
+        raw_result = await self._list(
             page,
             count,
             code=code,
@@ -33,3 +34,12 @@ class LeadSource(AlfaObject):
             name=name,
             **kwargs
         )
+        return [models.LeadSource(raw_result.pop('id'), **raw_result) for item in raw_result['items']]
+
+    async def get(self, id_: int) -> models.LeadSource:
+        raw_result = await self._get(id_)
+        return models.LeadSource(raw_result.pop('id'), **raw_result)
+
+    async def save(self, model: models.LeadSource) -> models.LeadSource:
+        raw_result = await self._save(**model.serialize())
+        return models.LeadSource(raw_result.pop('id'), **raw_result)

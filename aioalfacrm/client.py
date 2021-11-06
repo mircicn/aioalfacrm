@@ -5,7 +5,7 @@ import aiohttp
 from .core.api import ApiClient
 from .core.auth import AuthManager
 from .core.exceptions import ApiException
-from .objects import Branch, Customer, Location, StudyStatus, Subject, LeadStatus, LeadSource
+from .crud_objects import Branch, Customer, Location, StudyStatus, Subject, LeadStatus, LeadSource
 
 
 class AlfaClient:

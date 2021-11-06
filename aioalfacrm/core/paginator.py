@@ -10,7 +10,7 @@ class Paginator(typing.Generic[T]):
 
     def __init__(
             self,
-            alfa_object: 'object_.AlfaObject',
+            alfa_object: 'object_.AlfaCRUDObject',
             start_page: int = 0,
             page_size: int = 20,
             filters: typing.Dict[str, typing.Any] = None

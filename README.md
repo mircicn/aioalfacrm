@@ -11,6 +11,7 @@
 ## Package is in development
 
 ## Installation using pip
+
 ```
 $ pip install aioalfacrm
 ```
@@ -20,6 +21,7 @@ $ pip install aioalfacrm
 ```python
 import asyncio
 from aioalfacrm import AlfaClient
+from aioalfacrm.models import Location
 
 HOSTNAME = 'demo.s20.online'
 EMAIL = 'api-email@email.example'
@@ -37,11 +39,27 @@ async def main():
     try:
         # Check auth (Optionaly)
         if not await alfa_client.check_auth():
-            print("Authentification error")
+            print('Authentification error')
             return
         # Get branches
         branches = await alfa_client.branch.list(page=0, count=20)
+
+        # Edit branch
+        for branch in branches:
+            branch.name = f'{branch.name} - Edited'
+            # Save branch
+            await alfa_client.branch.save(branch)
+
+        # Create location
+        location = Location(
+            branch_id=1,
+            is_active=True,
+            name='New location',
+        )
+        await alfa_client.location.save(location)
+
     finally:
+        # Close session
         await alfa_client.close()
 
 
@@ -66,15 +84,15 @@ alfa_client.lead_source  # LeadSource
 ## Available CRM methods
 
 ```python
-alfa_client.<object>.list(**filters)  # Get objects list
-alfa_client.<object>.get(id)  # Get one object by id
-alfa_client.<object>.create(fields)  # Create object
-alfa_client.<object>.update(id, fields)  # Update object
+alfa_client. < object >.list(**filters)  # Get objects list
+alfa_client. < object >.get(id)  # Get one object by id
+alfa_client. < object >.save(model)  # Create object
 ```
 
 ## Paginator
+
 ```python
 # Get all objects
-for page in alfa_client.<object>.get_paginator():
+for page in alfa_client. < object >.get_paginator():
     objects = page.items
 ```

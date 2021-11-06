@@ -1,9 +1,10 @@
 import typing
 
-from ..core.object_ import AlfaObject
+from .. import models
+from ..core.object_ import AlfaCRUDObject
 
 
-class Customer(AlfaObject):
+class Customer(AlfaCRUDObject):
     object_name = 'customer'
 
     async def list(
@@ -14,7 +15,7 @@ class Customer(AlfaObject):
             is_study: typing.Optional[bool] = None,
             legal_type: typing.Optional[int] = None,
             **kwargs,
-    ):
+    ) -> typing.List[models.Customer]:
         """
         Get list customers
         :param name: filter by name
@@ -25,10 +26,20 @@ class Customer(AlfaObject):
         :param kwargs: additional filters
         :return: list of branches
         """
-        return await self._list(
+        raw_data = await self._list(
             page,
             count,
             name=name,
             is_study=is_study,
             legal_type=legal_type,
             **kwargs)
+
+        return [models.Customer(item.pop('id'), **item) for item in raw_data['items']]
+
+    async def get(self, id_: int) -> models.Customer:
+        raw_data = await self._get(id_)
+        return models.Customer(raw_data.pop('id'), **raw_data)
+
+    async def save(self, customer: models.Customer) -> models.Customer:
+        raw_data = await self._save(**customer.serialize())
+        return models.Customer(raw_data.pop('id'), **raw_data)

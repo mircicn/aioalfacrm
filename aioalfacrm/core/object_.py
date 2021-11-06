@@ -36,7 +36,7 @@ class BaseAlfaObject:
         :return: object
         """
         get_url = self._api_client.get_url_for_method(self.object_name, 'index')
-        result = await self._api_client.request(get_url, params={'id': id_})
+        result = await self._api_client.request(get_url, json={'id': id_})
         if result['count'] == 0:
             raise NotFound(404, f'{self.object_name} not found')
         return result['items'][0]
@@ -63,7 +63,7 @@ class BaseAlfaObject:
         return result['model']
 
 
-class AlfaObject(BaseAlfaObject):
+class AlfaCRUDObject(BaseAlfaObject):
 
     async def get(self, id_: int) -> typing.Dict[str, typing.Any]:
         """
@@ -88,18 +88,11 @@ class AlfaObject(BaseAlfaObject):
         """
         return await self._list(page, count, **kwargs)
 
-    async def create(
-            self,
-            fields: typing.Dict[str, typing.Any],
-    ) -> typing.Dict[str, typing.Any]:
-        return await self._create(**fields)
-
-    async def update(
-            self,
-            id_: int,
-            fields: typing.Dict[str, typing.Any],
-    ) -> typing.Dict[str, typing.Any]:
-        return await self._update(id_, **fields)
+    async def _save(self, **kwargs: typing.Dict[str, typing.Any]) -> typing.Dict[str, typing.Any]:
+        if 'id' in kwargs:
+            return await self._update(kwargs.pop('id'), **kwargs)
+        else:
+            return await self._create(**kwargs)
 
     async def get_paginator(self, start_page: int = 0, page_size: int = 100, **kwargs) -> Paginator[dict]:
         """
