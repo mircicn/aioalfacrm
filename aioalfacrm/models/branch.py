@@ -7,7 +7,7 @@ from ..core import AlfaObject
 class Branch(AlfaObject):
     id = fields.String()
     name = fields.String()
-    is_active = fields.Integer()
+    is_active = fields.Bool()
     subject_ids = fields.ListField(base=fields.Integer())
 
     def __init__(

@@ -10,7 +10,7 @@ class Customer(AlfaObject):
     name = fields.String()
     branch_ids = fields.ListField(fields.Integer())
     teacher_ids = fields.ListField(fields.Integer())
-    is_study = fields.Integer(fields.Integer())
+    is_study = fields.Bool()
     study_status_id = fields.Integer()
     lead_status_id = fields.Integer()
     lead_source_id = fields.Integer()

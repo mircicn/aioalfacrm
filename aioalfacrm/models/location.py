@@ -7,7 +7,7 @@ from ..core import AlfaObject
 class Location(AlfaObject):
     id = fields.Integer()
     branch_id = fields.Integer()
-    is_active = fields.Integer()
+    is_active = fields.Bool()
     name = fields.String()
     weight = fields.Integer()
 

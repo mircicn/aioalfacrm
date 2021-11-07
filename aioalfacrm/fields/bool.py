@@ -3,13 +3,12 @@ import typing
 from ..core import BaseField
 
 
-class Float(BaseField):
+class Bool(BaseField):
     def serialize(self, value: typing.Any) -> typing.Any:
         return value
 
     def deserialzie(self, value: typing.Any) -> typing.Any:
         try:
-            value = float(value)
-            return value
+            return bool(value)
         except ValueError:
-            raise ValueError('{value} is not float')
+            raise ValueError(f'{value} is not bool')
