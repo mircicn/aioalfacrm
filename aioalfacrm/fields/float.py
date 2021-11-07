@@ -8,6 +8,8 @@ class Float(BaseField):
         return value
 
     def deserialzie(self, value: typing.Any) -> typing.Any:
+        if value is None:
+            return value
         try:
             value = float(value)
             return value

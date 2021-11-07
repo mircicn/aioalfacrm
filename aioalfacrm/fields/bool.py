@@ -8,7 +8,6 @@ class Bool(BaseField):
         return value
 
     def deserialzie(self, value: typing.Any) -> typing.Any:
-        try:
-            return bool(value)
-        except ValueError:
-            raise ValueError(f'{value} is not bool')
+        if value is None:
+            return None
+        return bool(value)

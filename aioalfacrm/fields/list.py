@@ -13,13 +13,11 @@ class ListField(BaseField):
         super(ListField, self).__init__(*args, default=default, **kwargs)
 
     def serialize(self, value: typing.List[typing.Any]) -> typing.Any:
-        if value is None:
-            return None
         serialize = self.base_field.serialize
         return [serialize(item) for item in value]
 
-    def deserialzie(self, value: typing.Any) -> typing.List[typing.Any]:
+    def deserialzie(self, value: typing.Any) -> typing.Optional[typing.List[typing.Any]]:
         if value is None:
-            return []
+            return None
         deserialize = self.base_field.deserialzie
         return [deserialize(item) for item in value]

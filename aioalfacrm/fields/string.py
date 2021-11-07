@@ -8,8 +8,8 @@ class String(BaseField):
         return value
 
     def deserialzie(self, value: typing.Any) -> typing.Any:
-        try:
-            value = str(value)
+        if value is None:
             return value
-        except ValueError:
-            raise ValueError(f'{value} if not string')
+
+        value = str(value)
+        return value
