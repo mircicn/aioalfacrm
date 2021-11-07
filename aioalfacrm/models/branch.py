@@ -18,6 +18,4 @@ class Branch(AlfaObject):
             subject_ids: Optional[List[int]] = None,
             **kwargs,
     ):
-        if subject_ids is None:
-            subject_ids = []
         super(Branch, self).__init__(id=id_, name=name, is_active=is_active, subject_ids=subject_ids, **kwargs)

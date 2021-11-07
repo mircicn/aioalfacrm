@@ -32,11 +32,11 @@ class BaseField(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def serialize(self, value: typing.Any) -> typing.Any:
-        pass
+        pass  # pragma: no cover
 
     @abc.abstractmethod
     def deserialzie(self, value: typing.Any) -> typing.Any:
-        pass
+        pass  # pragma: no cover
 
     def export(self, instance):
         """

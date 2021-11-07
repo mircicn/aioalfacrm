@@ -22,10 +22,9 @@ class BaseCRUDAlfaObject:
         list_url = self._api_client.get_url_for_method(self.object_name, 'index')
         payload = {
             'page': page,
-            'count': count,
             **kwargs
         }
-        result = await self._api_client.request(list_url, json=payload)
+        result = await self._api_client.request(list_url, json=payload, params={'per-page': count})
         return result
 
     async def _get(self, id_: int) -> typing.Dict[str, typing.Any]:
@@ -61,7 +60,7 @@ class BaseCRUDAlfaObject:
         result = await self._api_client.request(update_url, params={'id': id_}, json=kwargs)
         return result['model']
 
-    async def _save(self, **kwargs: typing.Dict[str, typing.Any]) -> typing.Dict[str, typing.Any]:
+    async def _save(self, **kwargs) -> typing.Dict[str, typing.Any]:
         if 'id' in kwargs:
             return await self._update(kwargs.pop('id'), **kwargs)
         else:
