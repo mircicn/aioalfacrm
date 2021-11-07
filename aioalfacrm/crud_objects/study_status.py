@@ -1,10 +1,11 @@
 import typing
 
-from .. import models
 from ..core.object_ import AlfaCRUDObject
 
+T = typing.TypeVar('T')
 
-class StudyStatus(AlfaCRUDObject):
+
+class StudyStatus(AlfaCRUDObject, typing.Generic[T]):
     object_name = 'study-status'
 
     async def list(
@@ -13,7 +14,7 @@ class StudyStatus(AlfaCRUDObject):
             count: int = 100,
             name: typing.Optional[str] = None,
             **kwargs,
-    ) -> typing.List[models.StudyStatus]:
+    ) -> typing.List[T]:
         """
         Get list study statuses
         :param name: filter by name
@@ -29,12 +30,4 @@ class StudyStatus(AlfaCRUDObject):
             **kwargs
         )
 
-        return [models.StudyStatus(item['id'], **item) for item in raw_result['items']]
-
-    async def get(self, id_: int) -> models.StudyStatus:
-        raw_result = await self._get(id_)
-        return models.StudyStatus(raw_result.pop('id'), **raw_result)
-
-    async def save(self, model: models.StudyStatus) -> models.StudyStatus:
-        raw_result = await self._save(**model.serialize())
-        return models.StudyStatus(raw_result.pop('id'), **raw_result)
+        return [self._model_class(id_=item['id'], **item) for item in raw_result['items']]

@@ -5,8 +5,8 @@ from ..core import AlfaObject
 
 
 class Subject(AlfaObject):
-    id = fields.Integer()
-    name = fields.String()
+    id: Optional[int] = fields.Integer()
+    name: Optional[str] = fields.String()
 
     def __init__(
             self,

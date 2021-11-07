@@ -5,10 +5,10 @@ from ..core import AlfaObject
 
 
 class LeadSource(AlfaObject):
-    id = fields.Integer()
-    code = fields.String()
-    name = fields.String()
-    is_enabled = fields.Bool()
+    id: Optional[int] = fields.Integer()
+    code: Optional[str] = fields.String()
+    name: Optional[str] = fields.String()
+    is_enabled: Optional[bool] = fields.Bool()
 
     def __init__(
             self,

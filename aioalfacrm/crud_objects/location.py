@@ -1,10 +1,11 @@
 import typing
 
-from .. import models
 from ..core.object_ import AlfaCRUDObject
 
+T = typing.TypeVar('T')
 
-class Location(AlfaCRUDObject):
+
+class Location(AlfaCRUDObject, typing.Generic[T]):
     object_name = 'location'
 
     async def list(
@@ -14,7 +15,7 @@ class Location(AlfaCRUDObject):
             name: typing.Optional[str] = None,
             is_active: typing.Optional[bool] = None,
             **kwargs,
-    ) -> typing.List[models.Location]:
+    ) -> typing.List[T]:
         """
         Get list locations
         :param name: filter by name
@@ -26,14 +27,4 @@ class Location(AlfaCRUDObject):
         """
         raw_result = await self._list(page, count, name=name, is_active=is_active, **kwargs)
 
-        return [models.Location(item.pop('id'), **item) for item in raw_result['items']]
-
-    async def get(self, id_: int) -> models.Location:
-        raw_result = await self._get(id_)
-
-        return models.Location(raw_result.pop('id'), **raw_result)
-
-    async def save(self, model: models.Location) -> models.Location:
-        raw_result = await self._save(**model.serialize())
-
-        return models.Location(raw_result.pop('id'), **raw_result)
+        return [self._model_class(id_=item.pop('id'), **item) for item in raw_result['items']]

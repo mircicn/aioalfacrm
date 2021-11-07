@@ -1,10 +1,11 @@
 import typing
 
-from .. import models
 from ..core.object_ import AlfaCRUDObject
 
+T = typing.TypeVar('T')
 
-class Branch(AlfaCRUDObject):
+
+class Branch(AlfaCRUDObject, typing.Generic[T]):
     object_name = 'branch'
 
     async def list(
@@ -15,7 +16,7 @@ class Branch(AlfaCRUDObject):
             is_active: typing.Optional[bool] = None,
             subject_ids: typing.Optional[typing.List[int]] = None,
             **kwargs,
-    ) -> typing.List[models.Branch]:
+    ) -> typing.List[T]:
         """
         Get list branches
         :param name: filter by name
@@ -27,12 +28,4 @@ class Branch(AlfaCRUDObject):
         :return: list of branches
         """
         row_data = await self._list(page, count, name=name, is_active=is_active, subject_ids=subject_ids, **kwargs)
-        return [models.Branch(item.pop('id'), **item) for item in row_data['items']]
-
-    async def get(self, id_: int) -> models.Branch:
-        item = await self._get(id_)
-        return models.Branch(item.pop('id'), **item)
-
-    async def save(self, branch: models.Branch) -> models.Branch:
-        raw_data = await self._save(**branch.serialize())
-        return models.Branch(**raw_data)
+        return [self._model_class(id_=item.pop('id'), **item) for item in row_data['items']]

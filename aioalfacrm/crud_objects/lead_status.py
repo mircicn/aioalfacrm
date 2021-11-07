@@ -1,10 +1,11 @@
 import typing
 
-from .. import models
 from ..core.object_ import AlfaCRUDObject
 
+T = typing.TypeVar('T')
 
-class LeadStatus(AlfaCRUDObject):
+
+class LeadStatus(AlfaCRUDObject, typing.Generic[T]):
     object_name = 'lead-status'
 
     async def list(
@@ -14,7 +15,7 @@ class LeadStatus(AlfaCRUDObject):
             name: typing.Optional[str] = None,
             is_enabled: typing.Optional[bool] = None,
             **kwargs,
-    ) -> typing.List[models.LeadStatus]:
+    ) -> typing.List[T]:
         """
         Get list lead statuses
         :param name: filter by name
@@ -32,12 +33,4 @@ class LeadStatus(AlfaCRUDObject):
             **kwargs
         )
 
-        return [models.LeadStatus(item.pop('id'), **item) for item in raw_result['items']]
-
-    async def get(self, id_: int) -> models.LeadStatus:
-        raw_result = await self._get(id_)
-        return models.LeadStatus(raw_result.pop('id'), **raw_result)
-
-    async def save(self, model: models.LeadStatus) -> models.LeadStatus:
-        raw_result = await self._save(**model.serialize())
-        return models.LeadStatus(raw_result.pop('id'), **raw_result)
+        return [self._model_class(id_=item.pop('id'), **item) for item in raw_result['items']]

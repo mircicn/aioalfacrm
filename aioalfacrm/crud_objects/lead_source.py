@@ -1,10 +1,11 @@
 import typing
 
-from .. import models
 from ..core.object_ import AlfaCRUDObject
 
+T = typing.TypeVar('T')
 
-class LeadSource(AlfaCRUDObject):
+
+class LeadSource(AlfaCRUDObject, typing.Generic[T]):
     object_name = 'lead-source'
 
     async def list(
@@ -15,7 +16,7 @@ class LeadSource(AlfaCRUDObject):
             code: typing.Optional[str] = None,
             is_enabled: typing.Optional[bool] = None,
             **kwargs,
-    ) -> typing.List[models.LeadSource]:
+    ) -> typing.List[T]:
         """
         Get list customers
         :param page: page
@@ -34,12 +35,4 @@ class LeadSource(AlfaCRUDObject):
             name=name,
             **kwargs
         )
-        return [models.LeadSource(raw_result.pop('id'), **raw_result) for item in raw_result['items']]
-
-    async def get(self, id_: int) -> models.LeadSource:
-        raw_result = await self._get(id_)
-        return models.LeadSource(raw_result.pop('id'), **raw_result)
-
-    async def save(self, model: models.LeadSource) -> models.LeadSource:
-        raw_result = await self._save(**model.serialize())
-        return models.LeadSource(raw_result.pop('id'), **raw_result)
+        return [self._model_class(id_=raw_result.pop('id'), **raw_result) for item in raw_result['items']]

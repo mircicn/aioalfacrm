@@ -5,9 +5,9 @@ from ..core import AlfaObject
 
 
 class LeadStatus(AlfaObject):
-    id = fields.Integer()
-    name = fields.String()
-    is_enabled = fields.Bool()
+    id: Optional[int] = fields.Integer()
+    name: Optional[str] = fields.String()
+    is_enabled: Optional[bool] = fields.Bool()
 
     def __init__(
             self,

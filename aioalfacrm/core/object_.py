@@ -2,10 +2,9 @@ import typing
 
 from .api import ApiClient
 from .exceptions import NotFound
-from .paginator import Paginator
 
 
-class BaseAlfaObject:
+class BaseCRUDAlfaObject:
     """Class for description API object"""
     object_name = None
 
@@ -62,50 +61,40 @@ class BaseAlfaObject:
         result = await self._api_client.request(update_url, params={'id': id_}, json=kwargs)
         return result['model']
 
-
-class AlfaCRUDObject(BaseAlfaObject):
-
-    async def get(self, id_: int) -> typing.Dict[str, typing.Any]:
-        """
-        Get branch by id
-        :param id_: id
-        :return: branch
-        """
-        return await self._get(id_)
-
-    async def list(
-            self,
-            page: int = 0,
-            count: int = 100,
-            **kwargs,
-    ) -> typing.Dict[str, typing.Any]:
-        """
-        Get list branches
-        :param page: page
-        :param count: count objects on page
-        :param kwargs: additional filters
-        :return: list of branches
-        """
-        return await self._list(page, count, **kwargs)
-
     async def _save(self, **kwargs: typing.Dict[str, typing.Any]) -> typing.Dict[str, typing.Any]:
         if 'id' in kwargs:
             return await self._update(kwargs.pop('id'), **kwargs)
         else:
             return await self._create(**kwargs)
 
-    async def get_paginator(self, start_page: int = 0, page_size: int = 100, **kwargs) -> Paginator[dict]:
-        """
-        Get page
-        :param start_page: start page
-        :param page_size: page size
-        :return: page
-        """
-        pagination = Paginator(
-            alfa_object=self,
-            start_page=start_page,
-            page_size=page_size,
-            filters=kwargs,
-        )
 
-        return pagination
+T = typing.TypeVar('T')
+
+
+class AlfaCRUDObject(BaseCRUDAlfaObject, typing.Generic[T]):
+    def __init__(self, api_client: ApiClient, model_class: typing.Type[T], **kwargs):
+        super(AlfaCRUDObject, self).__init__(api_client=api_client)
+        self._model_class = model_class
+
+    async def list(
+            self,
+            page: int = 0,
+            count: int = 100,
+            **kwargs
+    ) -> typing.List[T]:
+        raw_data = await self._list(page, count, **kwargs)
+        return [self._model_class(item.pop('id'), **item) for item in raw_data['items']]
+
+    async def get(
+            self,
+            id_: int,
+    ) -> T:
+        raw_data = await self._get(id_)
+        return self._model_class(id_=raw_data.pop('id'), **raw_data)
+
+    async def save(
+            self,
+            model: T,
+    ) -> T:
+        raw_data = await self._save(**model.serialize())
+        return self._model_class(id_=raw_data.pop('id'), **raw_data)

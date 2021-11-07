@@ -2,6 +2,7 @@ import typing
 
 import aiohttp
 
+from . import models
 from .core.api import ApiClient
 from .core.auth import AuthManager
 from .core.exceptions import ApiException
@@ -45,13 +46,13 @@ class AlfaClient:
         )
 
         # Set API objects
-        self.branch = Branch(self.api_client)
-        self.location = Location(self.api_client)
-        self.customer = Customer(self.api_client)
-        self.study_status = StudyStatus(self.api_client)
-        self.subject = Subject(self.api_client)
-        self.lead_status = LeadStatus(self.api_client)
-        self.lead_source = LeadSource(self.api_client)
+        self.branch = Branch(self.api_client, model_class=models.Branch)
+        self.location = Location(self.api_client, models.Location)
+        self.customer = Customer(self.api_client, models.Customer)
+        self.study_status = StudyStatus(self.api_client, models.StudyStatus)
+        self.subject = Subject(self.api_client, models.Subject)
+        self.lead_status = LeadStatus(self.api_client, models.LeadStatus)
+        self.lead_source = LeadSource(self.api_client, models.LeadSource)
 
     @classmethod
     def _create_session(cls) -> aiohttp.ClientSession:

@@ -1,21 +1,21 @@
-import typing
+from typing import Optional, List
 
 from .. import fields
 from ..core import AlfaObject
 
 
 class Branch(AlfaObject):
-    id = fields.String()
-    name = fields.String()
-    is_active = fields.Bool()
-    subject_ids = fields.ListField(base=fields.Integer())
+    id: Optional[int] = fields.String()
+    name: Optional[str] = fields.String()
+    is_active: Optional[bool] = fields.Bool()
+    subject_ids: Optional[List[int]] = fields.ListField(base=fields.Integer())
 
     def __init__(
             self,
-            id_: typing.Optional[int] = None,
-            name: str = '',
-            is_active: bool = True,
-            subject_ids: typing.Optional[typing.List[int]] = None,
+            id_: Optional[int] = None,
+            name: Optional[str] = '',
+            is_active: Optional[bool] = True,
+            subject_ids: Optional[List[int]] = None,
             **kwargs,
     ):
         if subject_ids is None:

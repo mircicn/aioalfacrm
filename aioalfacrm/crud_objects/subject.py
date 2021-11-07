@@ -1,10 +1,11 @@
 import typing
 
 from aioalfacrm.core.object_ import AlfaCRUDObject
-from .. import models
+
+T = typing.TypeVar('T')
 
 
-class Subject(AlfaCRUDObject):
+class Subject(AlfaCRUDObject, typing.Generic[T]):
     object_name = 'subject'
 
     async def list(
@@ -13,7 +14,7 @@ class Subject(AlfaCRUDObject):
             count: int = 100,
             name: typing.Optional[str] = None,
             **kwargs,
-    ) -> typing.List[models.Subject]:
+    ) -> typing.List[T]:
         """
         Get list customers
         :param page: page
@@ -29,13 +30,4 @@ class Subject(AlfaCRUDObject):
             **kwargs
         )
 
-        return [models.Subject(item.pop('id'), **item) for item in raw_result['items']]
-
-    async def get(self, id_: int) -> models.Subject:
-        raw_result = await self._get(id_)
-
-        return models.Subject(raw_result.pop('id'), **raw_result)
-
-    async def save(self, model: models.Subject) -> models.Subject:
-        raw_result = await self._save(**model.serialize())
-        return models.Subject(raw_result.pop('id'), **raw_result)
+        return [self._model_class(id_=item.pop('id'), **item) for item in raw_result['items']]

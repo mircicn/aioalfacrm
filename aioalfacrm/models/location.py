@@ -5,11 +5,11 @@ from ..core import AlfaObject
 
 
 class Location(AlfaObject):
-    id = fields.Integer()
-    branch_id = fields.Integer()
-    is_active = fields.Bool()
-    name = fields.String()
-    weight = fields.Integer()
+    id: Optional[int] = fields.Integer()
+    branch_id: Optional[int] = fields.Integer()
+    is_active: Optional[bool] = fields.Bool()
+    name: Optional[str] = fields.String()
+    weight: Optional[int] = fields.Integer()
 
     def __init__(
             self,

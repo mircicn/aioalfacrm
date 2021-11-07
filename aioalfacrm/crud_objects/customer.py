@@ -1,10 +1,11 @@
 import typing
 
-from .. import models
 from ..core.object_ import AlfaCRUDObject
 
+T = typing.TypeVar('T')
 
-class Customer(AlfaCRUDObject):
+
+class Customer(AlfaCRUDObject, typing.Generic[T]):
     object_name = 'customer'
 
     async def list(
@@ -15,7 +16,7 @@ class Customer(AlfaCRUDObject):
             is_study: typing.Optional[bool] = None,
             legal_type: typing.Optional[int] = None,
             **kwargs,
-    ) -> typing.List[models.Customer]:
+    ) -> typing.List[T]:
         """
         Get list customers
         :param name: filter by name
@@ -34,12 +35,4 @@ class Customer(AlfaCRUDObject):
             legal_type=legal_type,
             **kwargs)
 
-        return [models.Customer(item.pop('id'), **item) for item in raw_data['items']]
-
-    async def get(self, id_: int) -> models.Customer:
-        raw_data = await self._get(id_)
-        return models.Customer(raw_data.pop('id'), **raw_data)
-
-    async def save(self, customer: models.Customer) -> models.Customer:
-        raw_data = await self._save(**customer.serialize())
-        return models.Customer(raw_data.pop('id'), **raw_data)
+        return [self._model_class(id_=item.pop('id'), **item) for item in raw_data['items']]
