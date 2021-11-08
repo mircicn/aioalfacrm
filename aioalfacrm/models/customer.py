@@ -20,6 +20,10 @@ class Customer(AlfaObject):
     company_id: Optional[int] = fields.Integer()
     dob: Optional[datetime.date] = fields.DateField()
     balance: Optional[float] = fields.Float()
+    balance_base: Optional[float] = fields.Float()
+    last_attend_date: Optional[datetime.date] = fields.DateField()
+    b_date: Optional[datetime.datetime] = fields.DateTimeField()
+    e_date: Optional[datetime.datetime] = fields.DateField()
     paid_lesson_count: Optional[int] = fields.Integer()
     phone: Optional[List[str]] = fields.ListField(fields.String())
     email: Optional[List[str]] = fields.ListField(fields.String())
@@ -42,6 +46,10 @@ class Customer(AlfaObject):
             company_id: Optional[int] = None,
             dob: Optional[datetime.date] = None,
             balance: Optional[float] = None,
+            balance_base: Optional[float] = None,
+            last_attend_date: Optional[datetime.date] = None,
+            b_date: Optional[datetime.datetime] = None,
+            e_date: Optional[datetime.date] = None,
             paid_lesson_count: Optional[int] = None,
             phone: Optional[List[str]] = None,
             email: Optional[List[str]] = None,
@@ -64,6 +72,10 @@ class Customer(AlfaObject):
             company_id=company_id,
             dob=dob,
             balance=balance,
+            base_balance=balance_base,
+            last_attend_date=last_attend_date,
+            b_date=b_date,
+            e_date=e_date,
             paid_lesson_count=paid_lesson_count,
             phone=phone,
             email=email,
