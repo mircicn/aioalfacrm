@@ -224,3 +224,34 @@ async def test_alfa_crud_object_save(api_client, aresponses):
     created_customer.field1 = 12
     updated_customer = await a.save(created_customer)
     assert updated_customer.serialize() == {'id': 4, 'field1': 12}
+
+
+@pytest.mark.asyncio
+async def test_alfa_crut_object_page(api_client, aresponses):
+    add_auth_request(aresponses)
+    aresponses.add(
+        'demo.s20.online', '/v2api/1/customer/index', 'POST',
+        {'total': 10, 'count': 2, 'page': 1, 'items': [{'id': 1, 'field1': 1}, {'id': 2, 'field1': 2}]},
+        body_pattern='{"page": 1}'
+    )
+    a = TestCRUDAlfaObject(
+        api_client=api_client,
+        model_class=TestModel,
+    )
+    page = await a.page(page=1, count=2)
+
+    assert page.items == [TestModel(id_=1, field1=1), TestModel(id_=2, field1=2)]
+    assert page.number == 1
+    assert page.total == 10
+
+
+@pytest.mark.asyncio
+async def test_alfa_crud_object_paginator(api_client):
+    a = TestCRUDAlfaObject(
+        api_client=api_client,
+        model_class=TestModel
+    )
+
+    paginator = a.paginator(start_page=0, page_size=1)
+
+    assert paginator._object == a

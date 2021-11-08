@@ -13,6 +13,14 @@ class TestClass(AlfaObject, AnotherClass):
     field4 = Integer()
 
 
+class FirstClass(AlfaObject):
+    field1 = Integer()
+
+
+class SecondClass(AlfaObject):
+    field2 = Integer()
+
+
 def test_init_alfa_object():
     a = TestClass(
         field1=1,
@@ -34,3 +42,26 @@ def test_alfa_object_serialize():
     assert serialized_object == {'field1': 1, 'field2_alias': 2, 'field3': 10}
     assert (str(a) == str({'field1': 1, 'field2_alias': 2, 'field3': 10}))
     assert (repr(a) == str({'field1': 1, 'field2_alias': 2, 'field3': 10}))
+
+
+def test_eq():
+    first_1 = FirstClass(
+        field1=1,
+    )
+
+    first_2 = FirstClass(
+        field1=1
+    )
+
+    first_3 = FirstClass(
+        field1=2,
+    )
+
+    second_1 = SecondClass(
+        field=1,
+    )
+
+    assert first_1 == first_1
+    assert first_1 == first_2
+    assert first_1 != first_3
+    assert first_1 != second_1

@@ -1,5 +1,6 @@
 import math
 import typing
+
 from . import object_
 from .page import Page
 
@@ -19,29 +20,26 @@ class Paginator(typing.Generic[T]):
         self._page: typing.Optional[Page[T]] = None
         self._total = 0
         self._page_size = page_size
+        if filters is None:
+            filters = {}
         self._filters = filters
         self._object = alfa_object
 
-    def __aiter__(self) -> 'Paginator[T]':
-        return self
+    def __aiter__(self) -> typing.Iterable[Page[T]]:
+        return self  # noqa
 
     async def __anext__(self) -> Page[T]:
         if self._total and self._page_number >= self.total_page:
             raise StopAsyncIteration
 
-        result = await self._object.list(
+        page = await self._object.page(
             page=self._page_number,
             count=self._page_size,
             **self._filters,
         )
+        self._total = page.total
         self._page_number += 1
-        self._total = result["total"]
-
-        return Page(
-            number=self._page_number,
-            items=result.get("items"),
-            total=self._total,
-        )
+        return page
 
     @property
     def total_page(self) -> int:
@@ -51,6 +49,3 @@ class Paginator(typing.Generic[T]):
         """
         return math.ceil(self._total / self._page_size)
 
-    @property
-    def page(self) -> Page[T]:
-        return self._page

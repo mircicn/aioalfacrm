@@ -92,3 +92,6 @@ class AlfaObject(metaclass=AlfaObjectMeta):
 
             result[self.props_aliases.get(name, name)] = value
         return result
+
+    def __eq__(self, other: 'AlfaObject') -> bool:
+        return self.serialize() == other.serialize() and self.__class__ == other.__class__

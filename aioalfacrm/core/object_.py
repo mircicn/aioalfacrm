@@ -2,6 +2,8 @@ import typing
 
 from .api import ApiClient
 from .exceptions import NotFound
+from .page import Page
+from .paginator import Paginator
 
 
 class BaseCRUDAlfaObject:
@@ -97,3 +99,20 @@ class AlfaCRUDObject(BaseCRUDAlfaObject, typing.Generic[T]):
     ) -> T:
         raw_data = await self._save(**model.serialize())
         return self._model_class(id_=raw_data.pop('id'), **raw_data)
+
+    async def page(self, page: int = 0, count: int = 100, **kwargs) -> Page[T]:
+        raw_data = await self._list(page, count, **kwargs)
+        items = [self._model_class(item.pop('id'), **item) for item in raw_data['items']]
+        return Page(
+            number=page,
+            items=items,
+            total=raw_data['total'],
+        )
+
+    def paginator(self, start_page: int = 0, page_size: int = 100, **kwargs) -> Paginator[T]:
+        return Paginator(
+            alfa_object=self,
+            start_page=start_page,
+            page_size=page_size,
+            filters=kwargs,
+        )
