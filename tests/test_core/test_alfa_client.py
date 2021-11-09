@@ -9,6 +9,10 @@ except ImportError:
 from aioalfacrm import AlfaClient
 
 
+def add_auth_request(aresponses):
+    aresponses.add('demo.s20.online', '/v2api/auth/login', 'POST', {'token': 'api-token'})
+
+
 @pytest.mark.asyncio
 async def test_init():
     client = AlfaClient(
@@ -37,3 +41,47 @@ async def test_close():
     with patch('aiohttp.ClientSession.close', new_callable=CoroutineMock) as mocked_close:
         await client.close()
         mocked_close.assert_awaited()
+
+
+@pytest.mark.asyncio
+async def test_auth(aresponses):
+    add_auth_request(aresponses)
+    client = AlfaClient(
+        hostname='demo.s20.online',
+        email='test@test.example',
+        api_key='api_key',
+        branch_id=1,
+    )
+
+    await client.auth()
+    assert client.auth_manager.token.value == 'api-token'
+
+
+@pytest.mark.asyncio
+async def test_correct_check_auth(aresponses):
+    aresponses.add('demo.s20.online', '/v2api/auth/login', 'POST',
+                   response=aresponses.Response(
+                       status=403, body="{'name': 'Forbidden', 'message': 'Not Authorized', 'code': 0, 'status': 403}"
+                   )
+                   )
+    client = AlfaClient(
+        hostname='demo.s20.online',
+        email='test@test.example',
+        api_key='api_key',
+        branch_id=1,
+    )
+
+    assert await client.check_auth() is False
+
+
+@pytest.mark.asyncio
+async def test_incorrect_check_auth(aresponses):
+    add_auth_request(aresponses)
+    client = AlfaClient(
+        hostname='demo.s20.online',
+        email='test@test.example',
+        api_key='api_key',
+        branch_id=1,
+    )
+
+    assert await client.check_auth() is True
