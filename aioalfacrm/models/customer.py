@@ -72,7 +72,7 @@ class Customer(AlfaObject):
             company_id=company_id,
             dob=dob,
             balance=balance,
-            base_balance=balance_base,
+            balance_base=balance_base,
             last_attend_date=last_attend_date,
             b_date=b_date,
             e_date=e_date,

@@ -5,7 +5,7 @@ from ..core import AlfaObject
 
 
 class Branch(AlfaObject):
-    id: Optional[int] = fields.String()
+    id: Optional[int] = fields.Integer()
     name: Optional[str] = fields.String()
     is_active: Optional[bool] = fields.Bool()
     subject_ids: Optional[List[int]] = fields.ListField(base=fields.Integer())
