@@ -21,10 +21,11 @@ class BaseCRUDAlfaObject:
         :param kwargs: additional filters
         :return: objects list
         """
+        filters = {name: value for name, value in kwargs.items() if value is not None}
         list_url = self._api_client.get_url_for_method(self.object_name, 'index')
         payload = {
             'page': page,
-            **kwargs
+            **filters
         }
         result = await self._api_client.request(list_url, json=payload, params={'per-page': count})
         return result

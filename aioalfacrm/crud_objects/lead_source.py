@@ -35,4 +35,4 @@ class LeadSource(AlfaCRUDObject, typing.Generic[T]):
             name=name,
             **kwargs
         )
-        return [self._model_class(id_=raw_result.pop('id'), **raw_result) for item in raw_result['items']]
+        return [self._model_class(id_=item.pop('id'), **item) for item in raw_result['items']]
