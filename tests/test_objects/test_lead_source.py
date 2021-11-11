@@ -15,7 +15,8 @@ LEAD_SOURCE_RESPONSE = {
             'id': 1,
             'name': 'Name',
             'code': 'Code',
-            'is_enabled': 1
+            'is_enabled': 1,
+            'weight': 1,
         }
     ]
 }
@@ -62,3 +63,4 @@ async def test_lead_source(api_client, aresponses):
     assert lead_source.name == 'Name'
     assert lead_source.code == 'Code'
     assert lead_source.is_enabled is True
+    assert lead_source.weight == 1

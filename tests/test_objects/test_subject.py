@@ -14,6 +14,7 @@ SUBJECT_RESPONSE = {
         {
             'id': 1,
             'name': 'Name',
+            'weight': 4,
         },
     ]
 }
@@ -58,3 +59,4 @@ async def test_subject(api_client, aresponses):
 
     assert subject.id == 1
     assert subject.name == 'Name'
+    assert subject.weight == 4

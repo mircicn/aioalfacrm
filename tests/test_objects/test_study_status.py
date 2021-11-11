@@ -15,6 +15,7 @@ STUDY_STATUS_RESPONSE = {
             'id': 1,
             'name': 'Name',
             'is_enabled': 1,
+            'weight': 3,
         },
     ]
 }
@@ -59,3 +60,4 @@ async def test_study_status(api_client, aresponses):
     assert study_status.id == 1
     assert study_status.name == 'Name'
     assert study_status.is_enabled is True
+    assert study_status.weight == 3

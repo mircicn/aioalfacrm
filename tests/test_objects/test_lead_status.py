@@ -15,6 +15,7 @@ LEAD_STATUS_RESPONSE = {
             'id': 1,
             'name': 'Name',
             'is_enabled': 0,
+            'weight': 2,
         }
     ]
 }
@@ -61,3 +62,4 @@ async def test_lead_status(api_client, aresponses):
     assert lead_status.id == 1
     assert lead_status.name == 'Name'
     assert lead_status.is_enabled is False
+    assert lead_status.weight == 2

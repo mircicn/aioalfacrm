@@ -16,6 +16,7 @@ BRANCH_RESPONSE = {
             'name': 'name',
             'is_active': False,
             'subject_ids': [1, 2, 3],
+            'weight': 1,
         }
     ]
 }
@@ -62,3 +63,4 @@ async def test_branch(aresponses, api_client):
     assert branch.name == 'name'
     assert branch.is_active is False
     assert branch.subject_ids == [1, 2, 3]
+    assert branch.weight == 1
