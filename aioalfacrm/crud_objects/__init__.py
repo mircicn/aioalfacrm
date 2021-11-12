@@ -3,6 +3,7 @@ from .customer import Customer
 from .group import Group
 from .lead_source import LeadSource
 from .lead_status import LeadStatus
+from .lesson import Lesson
 from .location import Location
 from .study_status import StudyStatus
 from .subject import Subject
