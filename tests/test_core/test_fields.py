@@ -15,6 +15,7 @@ class TestClass(AlfaObject):
     datetime_field: datetime.datetime = fields.DateTimeField()
     date_field: datetime.date = fields.DateField()
     list_field: List[int] = fields.ListField(fields.Integer())
+    time_field: datetime.time = fields.TimeField()
 
 
 def test_intger_field():
@@ -126,3 +127,30 @@ def test_list_field():
 
     with pytest.raises(ValueError):
         a.list_field = [1, 'not-digit']
+
+
+def test_time_field():
+    a = TestClass()
+
+    a.time_field = None
+    assert a.time_field is None
+
+    a.time_field = '2021-01-01 14:00:00'
+    assert a.time_field == datetime.time(14, 0, 0)
+
+    a.time_field = datetime.datetime(2021, 2, 1, 13, 0, 1)
+    assert a.time_field == datetime.time(13, 0, 1)
+
+    a.time_field = datetime.time(12, 1, 30)
+    assert a.time_field == datetime.time(12, 1, 30)
+
+    a.time_field = '14:00'
+    assert a.time_field == datetime.time(14, 0, 0)
+
+    a.time_field = '14:01:02'
+    assert a.time_field == datetime.time(14, 1, 2)
+
+    assert a.props['time_field'].export(a) == '14:01:02'
+
+    with pytest.raises(ValueError):
+        a.time_field = 'not time string'
