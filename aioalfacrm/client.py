@@ -60,6 +60,7 @@ class AlfaClient:
         self.tariff = crud_objects.Tariff(self.api_client, models.Tariff)
         self.regular_lesson = crud_objects.RegularLesson(self.api_client, models.Tariff)
         self.pay_item = crud_objects.PayItem(self.api_client, models.PayItem)
+        self.pay_item_category = crud_objects.PayItemCategory(self.api_client, models.PayItemCategory)
 
     @classmethod
     def _create_session(cls) -> aiohttp.ClientSession:

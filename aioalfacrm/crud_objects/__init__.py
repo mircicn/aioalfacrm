@@ -6,6 +6,7 @@ from .lead_status import LeadStatus
 from .lesson import Lesson
 from .location import Location
 from .pay_item import PayItem
+from .pay_item_category import PayItemCategory
 from .regular_lesson import RegularLesson
 from .room import Room
 from .study_status import StudyStatus
