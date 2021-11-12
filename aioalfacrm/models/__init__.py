@@ -8,4 +8,5 @@ from .location import Location
 from .room import Room
 from .study_status import StudyStatus
 from .subject import Subject
+from .tariff import Tariff
 from .task import Task
