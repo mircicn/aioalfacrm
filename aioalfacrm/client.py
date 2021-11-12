@@ -64,6 +64,7 @@ class AlfaClient:
         self.pay_account = crud_objects.PayAccount(self.api_client, models.PayAccount)
         self.pay = crud_objects.Pay(self.api_client, models.Pay)
         self.lesson_type = crud_objects.LessonType(self.api_client, models.LessonType)
+        self.lead_reject = crud_objects.LeadReject(self.api_client, models.LeadReject)
 
     @classmethod
     def _create_session(cls) -> aiohttp.ClientSession:

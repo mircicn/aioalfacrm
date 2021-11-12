@@ -1,6 +1,7 @@
 from .branch import Branch
 from .customer import Customer
 from .group import Group
+from .lead_reject import LeadReject
 from .lead_source import LeadSource
 from .lead_status import LeadStatus
 from .lesson import Lesson
