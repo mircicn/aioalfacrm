@@ -5,6 +5,7 @@ from .lead_source import LeadSource
 from .lead_status import LeadStatus
 from .lesson import Lesson
 from .location import Location
+from .pay import Pay
 from .pay_account import PayAccount
 from .pay_item import PayItem
 from .pay_item_category import PayItemCategory
