@@ -24,7 +24,6 @@ class BaseField(metaclass=abc.ABCMeta):
         return instance.values.get(self.alias, self.default)
 
     def __set__(self, instance, value: typing.Any):
-        value = self.deserialzie(value)
         self.set_value(instance, value)
 
     def __get__(self, instance, owner: typing.Any):
