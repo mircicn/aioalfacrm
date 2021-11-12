@@ -2,11 +2,11 @@ import typing
 
 import aiohttp
 
+from . import crud_objects
 from . import models
 from .core.api import ApiClient
 from .core.auth import AuthManager
 from .core.exceptions import ApiException
-from .crud_objects import Branch, Customer, Location, StudyStatus, Subject, LeadStatus, LeadSource
 
 
 class AlfaClient:
@@ -46,13 +46,14 @@ class AlfaClient:
         )
 
         # Set API objects
-        self.branch = Branch(self.api_client, model_class=models.Branch)
-        self.location = Location(self.api_client, models.Location)
-        self.customer = Customer(self.api_client, models.Customer)
-        self.study_status = StudyStatus(self.api_client, models.StudyStatus)
-        self.subject = Subject(self.api_client, models.Subject)
-        self.lead_status = LeadStatus(self.api_client, models.LeadStatus)
-        self.lead_source = LeadSource(self.api_client, models.LeadSource)
+        self.branch = crud_objects.Branch(self.api_client, model_class=models.Branch)
+        self.location = crud_objects.Location(self.api_client, models.Location)
+        self.customer = crud_objects.Customer(self.api_client, models.Customer)
+        self.study_status = crud_objects.StudyStatus(self.api_client, models.StudyStatus)
+        self.subject = crud_objects.Subject(self.api_client, models.Subject)
+        self.lead_status = crud_objects.LeadStatus(self.api_client, models.LeadStatus)
+        self.lead_source = crud_objects.LeadSource(self.api_client, models.LeadSource)
+        self.group = crud_objects.Group(self.api_client, models.Group)
 
     @classmethod
     def _create_session(cls) -> aiohttp.ClientSession:
