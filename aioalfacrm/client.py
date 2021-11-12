@@ -55,7 +55,8 @@ class AlfaClient:
         self.lead_source = crud_objects.LeadSource(self.api_client, models.LeadSource)
         self.group = crud_objects.Group(self.api_client, models.Group)
         self.lesson = crud_objects.Lesson(self.api_client, models.Lesson)
-
+        self.task = crud_objects.Task(self.api_client, models.Task)
+        
     @classmethod
     def _create_session(cls) -> aiohttp.ClientSession:
         """

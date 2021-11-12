@@ -7,3 +7,4 @@ from .lesson import Lesson
 from .location import Location
 from .study_status import StudyStatus
 from .subject import Subject
+from .task import Task
