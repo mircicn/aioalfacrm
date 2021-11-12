@@ -57,6 +57,7 @@ class AlfaClient:
         self.lesson = crud_objects.Lesson(self.api_client, models.Lesson)
         self.room = crud_objects.Room(self.api_client, models.Room)
         self.task = crud_objects.Task(self.api_client, models.Task)
+        self.tariff = crud_objects.Tariff(self.api_client, models.Tariff)
 
     @classmethod
     def _create_session(cls) -> aiohttp.ClientSession:
