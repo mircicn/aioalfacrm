@@ -5,5 +5,6 @@ from .lead_source import LeadSource
 from .lead_status import LeadStatus
 from .lesson import Lesson
 from .location import Location
+from .room import Room
 from .study_status import StudyStatus
 from .subject import Subject
