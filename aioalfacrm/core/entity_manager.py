@@ -13,31 +13,49 @@ class BaseManager:
     def __init__(self, api_client: ApiClient):
         self._api_client = api_client
 
-    async def _list(self, page: int, count: int = 100, **kwargs) -> typing.Dict[str, typing.Any]:
+    async def _list(
+            self,
+            page: int,
+            count: int = 100,
+            params: typing.Dict[str, typing.Any] = None,
+            **kwargs,
+    ) -> typing.Dict[str, typing.Any]:
         """
         Get objects list from api
         :param page: number of page
         :param count: count items on page
+        :param params: url params for filtering
         :param kwargs: additional filters
         :return: objects list
         """
         filters = {name: value for name, value in kwargs.items() if value is not None}
         list_url = self._api_client.get_url_for_method(self.object_name, 'index')
+        if params is None:
+            params = {}
         payload = {
             'page': page,
-            **filters
+            **filters,
         }
-        result = await self._api_client.request(list_url, json=payload, params={'per-page': count})
+        result = await self._api_client.request(list_url, json=payload, params={'per-page': count, **params})
         return result
 
-    async def _get(self, id_: int) -> typing.Dict[str, typing.Any]:
+    async def _get(
+            self,
+            id_: int,
+            params: typing.Dict[str, typing.Any] = None,
+            **kwargs,
+    ) -> typing.Dict[str, typing.Any]:
         """
         Get one object from api
         :param id_: object id
+        :param params: additional entity ids
         :return: object
         """
+        if params is None:
+            params = {}
+
         get_url = self._api_client.get_url_for_method(self.object_name, 'index')
-        result = await self._api_client.request(get_url, json={'id': id_})
+        result = await self._api_client.request(get_url, json={'id': id_}, params=params)
         if result['count'] == 0:
             raise NotFound(404, f'{self.object_name} not found')
         return result['items'][0]
@@ -76,34 +94,36 @@ T = typing.TypeVar('T')
 class EntityManager(BaseManager, typing.Generic[T]):
     def __init__(self, api_client: ApiClient, entity_class: typing.Type[T], **kwargs):
         super(EntityManager, self).__init__(api_client=api_client)
-        self._model_class = entity_class
+        self._entity_class = entity_class
 
     async def list(
             self,
             page: int = 0,
             count: int = 100,
+            *args,
             **kwargs
     ) -> typing.List[T]:
         raw_data = await self._list(page, count, **kwargs)
-        return [self._model_class(item.pop('id'), **item) for item in raw_data['items']]
+        return [self._entity_class(item.pop('id'), **item) for item in raw_data['items']]
 
     async def get(
             self,
             id_: int,
+            **kwargs,
     ) -> T:
-        raw_data = await self._get(id_)
-        return self._model_class(id_=raw_data.pop('id'), **raw_data)
+        raw_data = await self._get(id_, **kwargs)
+        return self._entity_class(id_=raw_data.pop('id'), **raw_data)
 
     async def save(
             self,
             model: T,
     ) -> T:
         raw_data = await self._save(**model.serialize())
-        return self._model_class(id_=raw_data.pop('id'), **raw_data)
+        return self._entity_class(id_=raw_data.pop('id'), **raw_data)
 
     async def page(self, page: int = 0, count: int = 100, **kwargs) -> Page[T]:
         raw_data = await self._list(page, count, **kwargs)
-        items = [self._model_class(item.pop('id'), **item) for item in raw_data['items']]
+        items = [self._entity_class(item.pop('id'), **item) for item in raw_data['items']]
         return Page(
             number=page,
             items=items,

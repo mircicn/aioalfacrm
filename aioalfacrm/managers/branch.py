@@ -28,4 +28,4 @@ class Branch(EntityManager, typing.Generic[T]):
         :return: list of branches
         """
         row_data = await self._list(page, count, name=name, is_active=is_active, subject_ids=subject_ids, **kwargs)
-        return [self._model_class(id_=item.pop('id'), **item) for item in row_data['items']]
+        return [self._entity_class(id_=item.pop('id'), **item) for item in row_data['items']]
