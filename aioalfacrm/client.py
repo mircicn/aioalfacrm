@@ -67,6 +67,7 @@ class AlfaClient:
         self.lead_reject = managers.LeadReject(self.api_client, entities.LeadReject)
         self.discount = managers.Discount(self.api_client, entities.Discount)
         self.cgi = managers.CGI(self.api_client, entities.CGI)
+        self.customer_tariff = managers.CustomerTariff(self.api_client, entities.CustomerTariff)
 
     @classmethod
     def _create_session(cls) -> aiohttp.ClientSession:
