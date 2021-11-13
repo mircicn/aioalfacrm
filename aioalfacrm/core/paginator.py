@@ -1,7 +1,7 @@
 import math
 import typing
 
-from . import object_
+from . import entity_manager
 from .page import Page
 
 T = typing.TypeVar('T')
@@ -11,7 +11,7 @@ class Paginator(typing.Generic[T]):
 
     def __init__(
             self,
-            alfa_object: 'object_.AlfaCRUDObject',
+            alfa_object: 'entity_manager.EntityManager',
             start_page: int = 0,
             page_size: int = 20,
             filters: typing.Dict[str, typing.Any] = None
@@ -48,4 +48,3 @@ class Paginator(typing.Generic[T]):
         :return:
         """
         return math.ceil(self._total / self._page_size)
-

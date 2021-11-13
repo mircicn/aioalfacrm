@@ -4,14 +4,14 @@ import aiohttp
 import pytest
 
 from aioalfacrm import fields
-from aioalfacrm.core import AlfaObject, AlfaCRUDObject, Paginator, Page, AuthManager, ApiClient
+from aioalfacrm.core import AlfaEntity, EntityManager, Paginator, Page, AuthManager, ApiClient
 
 
-class TestCRUDAlfaObject(AlfaCRUDObject):
+class TestCRUDAlfaObject(EntityManager):
     object_name = 'customer'
 
 
-class TestModel(AlfaObject):
+class TestModel(AlfaEntity):
     id: Optional[int] = fields.Integer()
     field1: Optional[int] = fields.Integer()
 
@@ -59,7 +59,7 @@ def test_init_page():
 def test_init_paginator(aresponses, api_client):
     crud_object = TestCRUDAlfaObject(
         api_client,
-        model_class=TestModel,
+        entity_class=TestModel,
     )
 
     paginator = Paginator(
@@ -96,7 +96,7 @@ async def test_paginator(aresponses, api_client):
 
     crud_object = TestCRUDAlfaObject(
         api_client,
-        model_class=TestModel,
+        entity_class=TestModel,
     )
 
     paginator: Paginator[TestModel] = Paginator(
