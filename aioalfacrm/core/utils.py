@@ -44,3 +44,20 @@ def check_response(
         raise ApiException(code, json_response.get("errors") or json_response.get("message") or body, request_info)
 
     return json_response
+
+
+def prepare_dict(
+        dict_: typing.Optional[typing.Dict[str, typing.Any]]
+) -> typing.Dict[str, typing.Any]:
+    """
+    Prepare dict for request
+    :param dict_: dict for prepare
+    :return: prepared dict
+    """
+
+    if dict_ is None:
+        dict_ = {}
+    else:
+        dict_ = {name: value for name, value in dict_.items() if value is not None}
+
+    return dict_

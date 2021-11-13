@@ -1,9 +1,10 @@
 import typing
 
-from .api import ApiClient
+from .api import ApiClient, ApiMethod
 from .exceptions import NotFound
 from .page import Page
 from .paginator import Paginator
+from .utils import prepare_dict
 
 
 class BaseManager:
@@ -12,6 +13,21 @@ class BaseManager:
 
     def __init__(self, api_client: ApiClient):
         self._api_client = api_client
+
+    async def _get_result(
+            self,
+            api_method: ApiMethod,
+            params: typing.Optional[typing.Dict[str, typing.Any]] = None,
+            json: typing.Optional[typing.Dict[str, typing.Any]] = None,
+    ) -> typing.Dict[str, typing.Any]:
+        params = prepare_dict(params)
+
+        if api_method == ApiMethod.LIST:
+            params['per-page'] = json.get('count', 100)
+
+        json = prepare_dict(json)
+        url = self._api_client.get_url_for_method(self.object_name, api_method.value)
+        return await self._api_client.request(url, json=json, params=params)
 
     async def _list(
             self,
@@ -24,23 +40,19 @@ class BaseManager:
         Get objects list from api
         :param page: number of page
         :param count: count items on page
-        :param params: url params for filtering
+        :param params: url dict_ for filtering
         :param kwargs: additional filters
         :return: objects list
         """
-        filters = {name: value for name, value in kwargs.items() if value is not None}
-        list_url = self._api_client.get_url_for_method(self.object_name, 'index')
-
-        if params is None:
-            params = {}
-        params = {name: value for name, value in params.items() if value is not None}
-
         payload = {
             'page': page,
-            **filters,
+            **kwargs,
         }
-        result = await self._api_client.request(list_url, json=payload, params={'per-page': count, **params})
-        return result
+        return await self._get_result(
+            params=params,
+            json=payload,
+            api_method=ApiMethod.LIST,
+        )
 
     async def _get(
             self,
@@ -54,41 +66,60 @@ class BaseManager:
         :param params: additional entity ids
         :return: object
         """
-        if params is None:
-            params = {}
-        params = {name: value for name, value in params.items() if value is not None}
-        get_url = self._api_client.get_url_for_method(self.object_name, 'index')
-        result = await self._api_client.request(get_url, json={'id': id_}, params=params)
+        result = await self._get_result(
+            params=params,
+            json={'id': id_},
+            api_method=ApiMethod.LIST,
+        )
         if result['count'] == 0:
             raise NotFound(404, f'{self.object_name} not found')
         return result['items'][0]
 
-    async def _create(self, **kwargs) -> typing.Dict[str, typing.Any]:
+    async def _create(
+            self,
+            params: typing.Optional[typing.Dict[str, typing.Any]] = None,
+            **kwargs,
+    ) -> typing.Dict[str, typing.Any]:
         """
         Create object in api
         :param kwargs: fields
         :return: created object
         """
-        create_url = self._api_client.get_url_for_method(self.object_name, 'create')
-        result = await self._api_client.request(create_url, json=kwargs)
+        result = await self._get_result(
+            api_method=ApiMethod.CREATE,
+            params=params,
+            json=kwargs,
+        )
         return result['model']
 
-    async def _update(self, id_: int, **kwargs) -> typing.Dict[str, typing.Any]:
+    async def _update(
+            self,
+            id_: int,
+            params: typing.Optional[typing.Dict[str, typing.Any]] = None,
+            **kwargs,
+    ) -> typing.Dict[str, typing.Any]:
         """
         Update object in api
         :param id_: object id
         :param kwargs: fields
         :return: updated object
         """
-        update_url = self._api_client.get_url_for_method(self.object_name, 'update')
-        result = await self._api_client.request(update_url, params={'id': id_}, json=kwargs)
+        result = await self._get_result(
+            api_method=ApiMethod.UPDATE,
+            params=params,
+            json=kwargs,
+        )
         return result['model']
 
-    async def _save(self, **kwargs) -> typing.Dict[str, typing.Any]:
+    async def _save(
+            self,
+            params: typing.Optional[typing.Dict[str, typing.Any]] = None,
+            **kwargs,
+    ) -> typing.Dict[str, typing.Any]:
         if 'id' in kwargs:
-            return await self._update(kwargs.pop('id'), **kwargs)
+            return await self._update(kwargs.pop('id'), params=params, **kwargs)
         else:
-            return await self._create(**kwargs)
+            return await self._create(params=params, **kwargs)
 
 
 T = typing.TypeVar('T')
@@ -124,7 +155,12 @@ class EntityManager(BaseManager, typing.Generic[T]):
         raw_data = await self._save(**model.serialize())
         return self._entity_class(id_=raw_data.pop('id'), **raw_data)
 
-    async def page(self, page: int = 0, count: int = 100, **kwargs) -> Page[T]:
+    async def page(
+            self,
+            page: int = 0,
+            count: int = 100,
+            **kwargs,
+    ) -> Page[T]:
         raw_data = await self._list(page, count, **kwargs)
         items = [self._entity_class(item.pop('id'), **item) for item in raw_data['items']]
         return Page(
@@ -133,7 +169,12 @@ class EntityManager(BaseManager, typing.Generic[T]):
             total=raw_data['total'],
         )
 
-    def paginator(self, start_page: int = 0, page_size: int = 100, **kwargs) -> Paginator[T]:
+    def paginator(
+            self,
+            start_page: int = 0,
+            page_size: int = 100,
+            **kwargs,
+    ) -> Paginator[T]:
         return Paginator(
             alfa_object=self,
             start_page=start_page,
