@@ -5,25 +5,25 @@ import pytest
 
 from aioalfacrm import fields
 from aioalfacrm.core import AuthManager, ApiClient
-from aioalfacrm.core.entity import AlfaEntity
-from aioalfacrm.core.entity_manager import BaseManager, EntityManager
 from aioalfacrm.core.exceptions import NotFound
+from aioalfacrm.core.model import AlfaObject
+from aioalfacrm.core.object_ import BaseCRUDAlfaObject, AlfaCRUDObject
 
 
-class TestClass(BaseManager):
+class TestClass(BaseCRUDAlfaObject):
     object_name = 'customer'
 
 
-class TestManager(EntityManager):
+class TestCRUDAlfaObject(AlfaCRUDObject):
     object_name = 'customer'
 
 
-class TestEntity(AlfaEntity):
+class TestModel(AlfaObject):
     id: Optional[int] = fields.Integer()
     field1: Optional[int] = fields.Integer()
 
     def __init__(self, id_: Optional[int] = None, field1: Optional[int] = None):
-        super(TestEntity, self).__init__(field1=field1, id=id_)
+        super(TestModel, self).__init__(field1=field1, id=id_)
 
 
 def add_auth_request(aresponses):
@@ -160,9 +160,9 @@ async def test_alfa_crud_object_list(api_client, aresponses):
         body_pattern='{"page": 1}'
     )
 
-    a = TestManager(
+    a = TestCRUDAlfaObject(
         api_client=api_client,
-        entity_class=TestEntity,
+        model_class=TestModel,
     )
 
     customers = await a.list(page=1, count=1)
@@ -186,9 +186,9 @@ async def test_alfa_crud_object_get(api_client, aresponses):
         body_pattern='{"id": 3}'
     )
 
-    a = TestManager(
+    a = TestCRUDAlfaObject(
         api_client=api_client,
-        entity_class=TestEntity,
+        model_class=TestModel,
     )
 
     customer = await a.get(2)
@@ -210,12 +210,12 @@ async def test_alfa_crud_object_save(api_client, aresponses):
         {'success': True, 'errors': [], 'model': {'id': 4, 'field1': 12}},
         body_pattern='{"field1": 12}'
     )
-    a = TestManager(
+    a = TestCRUDAlfaObject(
         api_client=api_client,
-        entity_class=TestEntity,
+        model_class=TestModel,
     )
 
-    new_customer = TestEntity(
+    new_customer = TestModel(
         field1=11,
     )
 
@@ -234,22 +234,22 @@ async def test_alfa_crut_object_page(api_client, aresponses):
         {'total': 10, 'count': 2, 'page': 1, 'items': [{'id': 1, 'field1': 1}, {'id': 2, 'field1': 2}]},
         body_pattern='{"page": 1}'
     )
-    a = TestManager(
+    a = TestCRUDAlfaObject(
         api_client=api_client,
-        entity_class=TestEntity,
+        model_class=TestModel,
     )
     page = await a.page(page=1, count=2)
 
-    assert page.items == [TestEntity(id_=1, field1=1), TestEntity(id_=2, field1=2)]
+    assert page.items == [TestModel(id_=1, field1=1), TestModel(id_=2, field1=2)]
     assert page.number == 1
     assert page.total == 10
 
 
 @pytest.mark.asyncio
 async def test_alfa_crud_object_paginator(api_client):
-    a = TestManager(
+    a = TestCRUDAlfaObject(
         api_client=api_client,
-        entity_class=TestEntity,
+        model_class=TestModel
     )
 
     paginator = a.paginator(start_page=0, page_size=1)

@@ -4,10 +4,10 @@ from typing import List
 import pytest
 
 from aioalfacrm import fields
-from aioalfacrm.core import AlfaEntity
+from aioalfacrm.core import AlfaObject
 
 
-class TestClass(AlfaEntity):
+class TestClass(AlfaObject):
     integer_field: int = fields.Integer()
     float_field: float = fields.Float()
     bool_field: bool = fields.Bool()

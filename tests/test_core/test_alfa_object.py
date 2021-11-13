@@ -1,4 +1,4 @@
-from aioalfacrm.core import AlfaEntity
+from aioalfacrm.core import AlfaObject
 from aioalfacrm.fields import Integer
 
 
@@ -6,18 +6,18 @@ class AnotherClass:
     pass
 
 
-class TestClass(AlfaEntity, AnotherClass):
+class TestClass(AlfaObject, AnotherClass):
     field1 = Integer()
     field2 = Integer(alias='field2_alias')
     field3 = Integer(default=10)
     field4 = Integer()
 
 
-class FirstClass(AlfaEntity):
+class FirstClass(AlfaObject):
     field1 = Integer()
 
 
-class SecondClass(AlfaEntity):
+class SecondClass(AlfaObject):
     field2 = Integer()
 
 

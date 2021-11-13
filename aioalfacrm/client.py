@@ -2,8 +2,8 @@ import typing
 
 import aiohttp
 
-from . import managers
-from . import entities
+from . import crud_objects
+from . import models
 from .core.api import ApiClient
 from .core.auth import AuthManager
 from .core.exceptions import ApiException
@@ -46,25 +46,25 @@ class AlfaClient:
         )
 
         # Set API objects
-        self.branch = managers.Branch(self.api_client, entities.Branch)
-        self.location = managers.Location(self.api_client, entities.Location)
-        self.customer = managers.Customer(self.api_client, entities.Customer)
-        self.study_status = managers.StudyStatus(self.api_client, entities.StudyStatus)
-        self.subject = managers.Subject(self.api_client, entities.Subject)
-        self.lead_status = managers.LeadStatus(self.api_client, entities.LeadStatus)
-        self.lead_source = managers.LeadSource(self.api_client, entities.LeadSource)
-        self.group = managers.Group(self.api_client, entities.Group)
-        self.lesson = managers.Lesson(self.api_client, entities.Lesson)
-        self.room = managers.Room(self.api_client, entities.Room)
-        self.task = managers.Task(self.api_client, entities.Task)
-        self.tariff = managers.Tariff(self.api_client, entities.Tariff)
-        self.regular_lesson = managers.RegularLesson(self.api_client, entities.Tariff)
-        self.pay_item = managers.PayItem(self.api_client, entities.PayItem)
-        self.pay_item_category = managers.PayItemCategory(self.api_client, entities.PayItemCategory)
-        self.pay_account = managers.PayAccount(self.api_client, entities.PayAccount)
-        self.pay = managers.Pay(self.api_client, entities.Pay)
-        self.lesson_type = managers.LessonType(self.api_client, entities.LessonType)
-        self.lead_reject = managers.LeadReject(self.api_client, entities.LeadReject)
+        self.branch = crud_objects.Branch(self.api_client, model_class=models.Branch)
+        self.location = crud_objects.Location(self.api_client, models.Location)
+        self.customer = crud_objects.Customer(self.api_client, models.Customer)
+        self.study_status = crud_objects.StudyStatus(self.api_client, models.StudyStatus)
+        self.subject = crud_objects.Subject(self.api_client, models.Subject)
+        self.lead_status = crud_objects.LeadStatus(self.api_client, models.LeadStatus)
+        self.lead_source = crud_objects.LeadSource(self.api_client, models.LeadSource)
+        self.group = crud_objects.Group(self.api_client, models.Group)
+        self.lesson = crud_objects.Lesson(self.api_client, models.Lesson)
+        self.room = crud_objects.Room(self.api_client, models.Room)
+        self.task = crud_objects.Task(self.api_client, models.Task)
+        self.tariff = crud_objects.Tariff(self.api_client, models.Tariff)
+        self.regular_lesson = crud_objects.RegularLesson(self.api_client, models.Tariff)
+        self.pay_item = crud_objects.PayItem(self.api_client, models.PayItem)
+        self.pay_item_category = crud_objects.PayItemCategory(self.api_client, models.PayItemCategory)
+        self.pay_account = crud_objects.PayAccount(self.api_client, models.PayAccount)
+        self.pay = crud_objects.Pay(self.api_client, models.Pay)
+        self.lesson_type = crud_objects.LessonType(self.api_client, models.LessonType)
+        self.lead_reject = crud_objects.LeadReject(self.api_client, models.LeadReject)
 
     @classmethod
     def _create_session(cls) -> aiohttp.ClientSession:
