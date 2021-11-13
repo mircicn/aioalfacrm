@@ -1,5 +1,6 @@
 import pathlib
 import sys
+from typing import List, Optional, Any, Dict
 
 root_dir = pathlib.Path('.').resolve()
 sys.path.append(str(root_dir))
@@ -13,6 +14,23 @@ DEFAULT_HOST = 'demo.s20.online'
 DEFAULT_EMAIL = 'test@test.test'
 DEFAULT_API_KEY = 'api-key'
 DEFAULT_BRANCH_ID = 1
+
+
+def make_response(
+        success: bool = True,
+        errors: Optional[List[str]] = None,
+        model: Dict[str, Any] = None
+) -> Dict:
+    if errors is None:
+        errors = []
+    if model is None:
+        model = {}
+
+    return {
+        'success': success,
+        'errors': errors,
+        'model': model
+    }
 
 
 @pytest.fixture
