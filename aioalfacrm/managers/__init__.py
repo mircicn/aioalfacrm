@@ -1,4 +1,5 @@
 from .branch import Branch
+from .cgi import CGI
 from .customer import Customer
 from .discount import Discount
 from .group import Group

@@ -30,8 +30,11 @@ class BaseManager:
         """
         filters = {name: value for name, value in kwargs.items() if value is not None}
         list_url = self._api_client.get_url_for_method(self.object_name, 'index')
+
         if params is None:
             params = {}
+        params = {name: value for name, value in params.items() if value is not None}
+
         payload = {
             'page': page,
             **filters,
@@ -53,7 +56,7 @@ class BaseManager:
         """
         if params is None:
             params = {}
-
+        params = {name: value for name, value in params.items() if value is not None}
         get_url = self._api_client.get_url_for_method(self.object_name, 'index')
         result = await self._api_client.request(get_url, json={'id': id_}, params=params)
         if result['count'] == 0:
