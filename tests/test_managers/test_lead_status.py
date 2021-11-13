@@ -1,10 +1,7 @@
-import aiohttp
 import pytest
 
 from aioalfacrm import entities
 from aioalfacrm import managers
-from aioalfacrm.core import AuthManager, ApiClient
-from . import add_auth_request
 
 LEAD_STATUS_RESPONSE = {
     'page': 0,
@@ -21,30 +18,8 @@ LEAD_STATUS_RESPONSE = {
 }
 
 
-@pytest.fixture
-def auth_manager():
-    session = aiohttp.ClientSession()
-    yield AuthManager(
-        email='test@test.test',
-        api_key='api-key',
-        hostname='demo.s20.online',
-        session=session,
-    )
-
-
-@pytest.fixture
-def api_client(auth_manager: AuthManager):
-    yield ApiClient(
-        hostname='demo.s20.online',
-        branch_id=1,
-        auth_manager=auth_manager,
-        session=auth_manager._session,  # noqa
-    )
-
-
 @pytest.mark.asyncio
 async def test_lead_status(api_client, aresponses):
-    add_auth_request(aresponses)
 
     aresponses.add('demo.s20.online', '/v2api/1/lead-status/index', 'POST', LEAD_STATUS_RESPONSE)
 

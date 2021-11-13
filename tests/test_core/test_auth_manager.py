@@ -45,14 +45,14 @@ async def test_refresh_token(aresponses):
 
 @pytest.mark.asyncio
 async def test_auto_refresh_token(aresponses):
-    aresponses.add('demo.s20.online', '/v2api/auth/login', 'post', {'token': 'first-api-token'})
-    aresponses.add('demo.s20.online', '/v2api/auth/login', 'post', {'token': 'second-api-token'})
+    aresponses.add('auth.s20.online', '/v2api/auth/login', 'post', {'token': 'first-api-token'})
+    aresponses.add('auth.s20.online', '/v2api/auth/login', 'post', {'token': 'second-api-token'})
 
     session = aiohttp.ClientSession()
     auth_manager = AuthManager(
         email='test@test.test',
         api_key='api-key',
-        hostname='demo.s20.online',
+        hostname='auth.s20.online',
         session=session,
         token_lifetime=15,
     )

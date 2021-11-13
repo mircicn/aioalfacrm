@@ -59,13 +59,13 @@ async def test_auth(aresponses):
 
 @pytest.mark.asyncio
 async def test_correct_check_auth(aresponses):
-    aresponses.add('demo.s20.online', '/v2api/auth/login', 'POST',
+    aresponses.add('auth.s20.online', '/v2api/auth/login', 'POST',
                    response=aresponses.Response(
                        status=403, body="{'name': 'Forbidden', 'message': 'Not Authorized', 'code': 0, 'status': 403}"
                    )
                    )
     client = AlfaClient(
-        hostname='demo.s20.online',
+        hostname='auth.s20.online',
         email='test@test.example',
         api_key='api_key',
         branch_id=1,
