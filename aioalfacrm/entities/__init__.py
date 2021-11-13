@@ -1,5 +1,6 @@
 from .branch import Branch
 from .customer import Customer
+from .discount import Discount
 from .group import Group
 from .lead_reject import LeadReject
 from .lead_source import LeadSource

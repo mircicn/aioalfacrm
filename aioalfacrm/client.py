@@ -2,8 +2,8 @@ import typing
 
 import aiohttp
 
-from . import managers
 from . import entities
+from . import managers
 from .core.api import ApiClient
 from .core.auth import AuthManager
 from .core.exceptions import ApiException
@@ -65,6 +65,8 @@ class AlfaClient:
         self.pay = managers.Pay(self.api_client, entities.Pay)
         self.lesson_type = managers.LessonType(self.api_client, entities.LessonType)
         self.lead_reject = managers.LeadReject(self.api_client, entities.LeadReject)
+        self.discount = managers.Discount(self.api_client, entities.Discount)
+        
 
     @classmethod
     def _create_session(cls) -> aiohttp.ClientSession:
