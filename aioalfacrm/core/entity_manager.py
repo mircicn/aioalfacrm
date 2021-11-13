@@ -106,7 +106,7 @@ class BaseManager:
         """
         result = await self._get_result(
             api_method=ApiMethod.UPDATE,
-            params=params,
+            params={'id': id_} if params is None else {**params, 'id': id_},
             json=kwargs,
         )
         return result['model']

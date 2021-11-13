@@ -1,6 +1,7 @@
 from .branch import Branch
 from .cgi import CGI
 from .customer import Customer
+from .customer_tariff import CustomerTariff
 from .discount import Discount
 from .group import Group
 from .lead_reject import LeadReject
