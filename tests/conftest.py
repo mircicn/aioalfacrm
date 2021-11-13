@@ -1,3 +1,9 @@
+import pathlib
+import sys
+
+root_dir = pathlib.Path('.').resolve()
+sys.path.append(str(root_dir))
+
 import aiohttp
 import pytest
 
