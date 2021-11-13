@@ -27,4 +27,4 @@ class Location(EntityManager, typing.Generic[T]):
         """
         raw_result = await self._list(page, count, name=name, is_active=is_active, **kwargs)
 
-        return [self._model_class(id_=item.pop('id'), **item) for item in raw_result['items']]
+        return [self._entity_class(id_=item.pop('id'), **item) for item in raw_result['items']]

@@ -1,3 +1,4 @@
+import typing
 from typing import Optional
 
 import aiohttp
@@ -16,6 +17,43 @@ class TestClass(BaseManager):
 
 class TestManager(EntityManager):
     object_name = 'customer'
+
+
+T = typing.TypeVar('T')
+
+
+class TestManagerWithUrlParams(EntityManager, typing.Generic[T]):
+    object_name = 'customer-tariff'
+
+    async def list(
+            self,
+            field1: int = 0,
+            page: int = 0,
+            count: int = 100,
+            **kwargs
+    ) -> typing.List[T]:
+        raw_data = await self._list(
+            page=page,
+            count=count,
+            params={'field1': field1},
+            **kwargs
+        )
+
+        return [self._entity_class(id_=item.pop('id'), **item) for item in raw_data['items']]
+
+    async def get(
+            self,
+            id_: int,
+            field1: int = 0,
+    ) -> T:
+        raw_data = await self._get(
+            id_=id_,
+            params={
+                'field1': field1,
+            }
+        )
+
+        return self._entity_class(id_=raw_data.pop('id'), **raw_data)
 
 
 class TestEntity(AlfaEntity):
@@ -255,3 +293,40 @@ async def test_alfa_crud_object_paginator(api_client):
     paginator = a.paginator(start_page=0, page_size=1)
 
     assert paginator._object == a
+
+
+@pytest.mark.asyncio
+async def test_alfa_manager_with_url_params(api_client, aresponses):
+    add_auth_request(aresponses)
+    aresponses.add(
+        'demo.s20.online', '/v2api/1/customer-tariff/index?per-page=100&field1=5', 'POST',
+        {'total': 10, 'count': 1, 'page': 0, 'items': [{'id': 1, 'field1': 5}]},
+        match_querystring=True,
+    )
+
+    aresponses.add(
+        'demo.s20.online', '/v2api/1/customer-tariff/index?field1=6', 'POST',
+        {'total': 10, 'count': 1, 'page': 0, 'items': [{'id': 2, 'field1': 6}]},
+        match_querystring=True,
+        body_pattern='{"id": 2}',
+    )
+
+    a = TestManagerWithUrlParams(
+        api_client=api_client,
+        entity_class=TestEntity,
+    )
+
+    entities = await a.list(
+        field1=5
+    )
+    assert len(entities) == 1
+
+    entity = entities[0]
+
+    assert entity.id == 1
+    assert entity.field1 == 5
+
+    entity = await a.get(
+        id_=2,
+        field1=6,
+    )

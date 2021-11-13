@@ -35,4 +35,4 @@ class Customer(EntityManager, typing.Generic[T]):
             legal_type=legal_type,
             **kwargs)
 
-        return [self._model_class(id_=item.pop('id'), **item) for item in raw_data['items']]
+        return [self._entity_class(id_=item.pop('id'), **item) for item in raw_data['items']]
