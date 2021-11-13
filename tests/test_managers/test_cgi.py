@@ -48,9 +48,9 @@ def api_client(auth_manager: AuthManager):
 @pytest.mark.asyncio
 async def test_cgi_manager_list(api_client, aresponses):
     add_auth_request(aresponses)
-    aresponses.add('demo.s20.online', '/v2api/1/cgi/index?per-page=100&group_id=3',
+    aresponses.add('demo.s20.online', '/v2api/1/cgi/index?group_id=3&per-page=100',
                    'POST', CGI_RESPONSE, match_querystring=True)
-    aresponses.add('demo.s20.online', '/v2api/1/cgi/index?per-page=100&customer_id=5',
+    aresponses.add('demo.s20.online', '/v2api/1/cgi/index?customer_id=5&per-page=100',
                    'POST', CGI_RESPONSE, match_querystring=True)
     cgi_manager = CGI(
         api_client=api_client,
@@ -81,9 +81,9 @@ async def test_cgi_manager_list(api_client, aresponses):
 @pytest.mark.asyncio
 async def test_cgi_manager_get(api_client, aresponses):
     add_auth_request(aresponses)
-    aresponses.add('demo.s20.online', '/v2api/1/cgi/index?group_id=3',
+    aresponses.add('demo.s20.online', '/v2api/1/cgi/index?group_id=3&per-page=100',
                    'POST', CGI_RESPONSE, match_querystring=True)
-    aresponses.add('demo.s20.online', '/v2api/1/cgi/index?customer_id=5',
+    aresponses.add('demo.s20.online', '/v2api/1/cgi/index?customer_id=5&per-page=100',
                    'POST', CGI_RESPONSE, match_querystring=True)
     cgi_manager = CGI(
         api_client=api_client,

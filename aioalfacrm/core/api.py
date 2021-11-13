@@ -1,9 +1,16 @@
 import typing
+from enum import Enum
 
 import aiohttp
 
 from .auth import AuthManager
 from .utils import make_url, check_response
+
+
+class ApiMethod(Enum):
+    LIST = 'index'
+    CREATE = 'create'
+    UPDATE = 'update'
 
 
 class ApiClient:
@@ -35,7 +42,7 @@ class ApiClient:
         Request on API
         :param url: URL
         :param json: json data
-        :param params: url params
+        :param params: url dict_
         :return: response
         """
         headers = await self._auth_manager.get_auth_headers()

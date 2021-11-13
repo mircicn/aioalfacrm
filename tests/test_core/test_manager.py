@@ -299,13 +299,13 @@ async def test_alfa_crud_object_paginator(api_client):
 async def test_alfa_manager_with_url_params(api_client, aresponses):
     add_auth_request(aresponses)
     aresponses.add(
-        'demo.s20.online', '/v2api/1/customer-tariff/index?per-page=100&field1=5', 'POST',
+        'demo.s20.online', '/v2api/1/customer-tariff/index?field1=5&per-page=100', 'POST',
         {'total': 10, 'count': 1, 'page': 0, 'items': [{'id': 1, 'field1': 5}]},
         match_querystring=True,
     )
 
     aresponses.add(
-        'demo.s20.online', '/v2api/1/customer-tariff/index?field1=6', 'POST',
+        'demo.s20.online', '/v2api/1/customer-tariff/index?field1=6&per-page=100', 'POST',
         {'total': 10, 'count': 1, 'page': 0, 'items': [{'id': 2, 'field1': 6}]},
         match_querystring=True,
         body_pattern='{"id": 2}',
