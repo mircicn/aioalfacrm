@@ -3,7 +3,7 @@ import json
 import pytest
 
 from aioalfacrm.core.exceptions import ApiException
-from aioalfacrm.core.utils import make_url, check_response
+from aioalfacrm.core.utils import make_url, check_response, prepare_dict
 
 
 @pytest.mark.parametrize(
@@ -44,3 +44,15 @@ def test_check_bad_request_response():
         check_response(400, json.dumps({"errors": ["First error"]}))
     assert exc.value._message == ["First error"]
     assert exc.value._code == 400
+
+
+def test_prepare_dict():
+    prepared_dict = prepare_dict(None)
+
+    assert prepared_dict == {}
+
+    prepared_dict = prepare_dict({'name': None, 'name2': 'value'})
+    assert prepared_dict == {'name2': 'value'}
+
+    prepared_dict = prepare_dict({'name': None, 'name2': None})
+    assert prepared_dict == {}
