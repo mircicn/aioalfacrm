@@ -4,8 +4,8 @@
 [![Supported python versions](https://img.shields.io/pypi/pyversions/aioalfacrm.svg?style=flat-square)](https://pypi.python.org/pypi/aioalfacrm)
 [![MIT License](https://img.shields.io/pypi/l/aioalfacrm.svg?style=flat-blue)](https://opensource.org/licenses/MIT)
 [![Downloads](https://img.shields.io/pypi/dm/aioalfacrm.svg?style=flat-square)](https://pypi.python.org/pypi/aioalfacrm)
-[![Tests](https://github.com/stas12312/aioalfacrm/actions/workflows/tests.yml/badge.svg)]( https://github.com/stas12312/aioalfacrm/actions)
 [![Codecov](https://img.shields.io/codecov/c/github/stas12312/aioalfacrm?style=flat-square)](https://app.codecov.io/gh/stas12312/aioalfacrm)
+[![Tests](https://github.com/stas12312/aioalfacrm/actions/workflows/tests.yml/badge.svg)]( https://github.com/stas12312/aioalfacrm/actions)
 
 **aioalfacrm** - is an asynchronous implementation for the [AlfaCRM API](https://alfacrm.pro/rest-api)
 
@@ -22,7 +22,7 @@ $ pip install aioalfacrm
 ```python
 import asyncio
 from aioalfacrm import AlfaClient
-from aioalfacrm.models import Location
+from aioalfacrm.entities import Location
 
 HOSTNAME = 'demo.s20.online'
 EMAIL = 'api-email@email.example'
@@ -103,9 +103,10 @@ for page in alfa_client. < object >.get_paginator():
 To work with custom fields, do the following
 
 ```python
-from aioalfacrm.models import Customer
+from aioalfacrm.entities import Customer
 from aioalfacrm import fields
 from typing import Optional
+
 
 # Extend existing model
 class CustomCustomer(Customer):
@@ -118,22 +119,25 @@ class CustomCustomer(Customer):
             *args,
             **kwargs,
     ):
-        super(CustomCustomer, self).(custom_field=custom_field, *args, **kwargs)
+        super(CustomCustomer, self).__init__(custom_field=custom_field, *args, **kwargs)
+
 
 # Create custom alfa client with new model
 from aioalfacrm import AlfaClient
-from aioalfacrm.crud_objects import Customer
+from aioalfacrm.managers import Customer
+
 
 class CustomAlfaClient(AlfaClient):
 
     def __init__(self, *args, **kwargs):
-        super(CustomAlfaClient, self).(*args, **kwargs)
+        super(CustomAlfaClient, self).__init__(*args, **kwargs)
 
         self.customer = Customer(
-            api_client=self.api_client, 
+            api_client=self.api_client,
             model_class=CustomCustomer
         )
-        
+
+
 # Create custom alfa client
 import asyncio
 
@@ -142,9 +146,10 @@ EMAIL = 'api-email@email.example'
 API_KEY = 'user-api-token'
 BRANCH_ID = 1
 
+
 async def main():
     alfa_client = CustomAlfaClient(hostname=HOSTNAME, email=EMAIL, api_key=API_KEY, branch_id=BRANCH_ID)
-    
+
     customers = await alfa_client.customer.list()
     for customer in customers:
         print(customer.custom_field)
