@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "aioalfacrm"
-version = "0.1.8"
+version = "0.2.0"
 description = "Is an asynchronous implementation for AlfaCRM API"
 authors = ["Stanislav Rush <911rush@gmail.com>"]
 license = "MIT"
