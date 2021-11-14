@@ -68,6 +68,7 @@ class AlfaClient:
         self.discount = managers.Discount(self.api_client, entities.Discount)
         self.cgi = managers.CGI(self.api_client, entities.CGI)
         self.customer_tariff = managers.CustomerTariff(self.api_client, entities.CustomerTariff)
+        self.communication = managers.Communication(self.api_client, entities.Communication)
 
     @classmethod
     def _create_session(cls) -> aiohttp.ClientSession:
