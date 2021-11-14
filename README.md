@@ -129,10 +129,12 @@ BRANCH_ID = 1
 
 async def main():
     alfa_client = CustomAlfaClient(hostname=HOSTNAME, email=EMAIL, api_key=API_KEY, branch_id=BRANCH_ID)
-
-    customers = await alfa_client.customer.list()
-    for customer in customers:
-        print(customer.custom_field)
+    try:
+        customers = await alfa_client.customer.list()
+        for customer in customers:
+            print(customer.custom_field)
+    finally:
+        await alfa_client.close()
 
 
 asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())  # For Windows
