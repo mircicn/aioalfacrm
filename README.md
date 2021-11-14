@@ -70,30 +70,10 @@ asyncio.run(main())
 
 ```
 
-## Available CRM objects
-
-```python
-alfa_client.branch  # Branch
-alfa_client.customer  # Customer
-alfa_client.location  # Location
-alfa_client.study_status  # StudyStatus
-alfa_client.subject  # Subject
-alfa_client.lead_status  # LeadStatus
-alfa_client.lead_source  # LeadSource
-```
-
-## Available CRM methods
-
-```python
-alfa_client. < object >.list(**filters)  # Get objects list
-alfa_client. < object >.get(id)  # Get one object by id
-alfa_client. < object >.save(model)  # Create object
-```
-
 ## Paginator
 
 ```python
-# Get all objects
+# Get all entities
 for page in alfa_client. < object >.get_paginator():
     objects = page.items
 ```
@@ -103,13 +83,13 @@ for page in alfa_client. < object >.get_paginator():
 To work with custom fields, do the following
 
 ```python
-from aioalfacrm.entities import Customer
+from aioalfacrm import entities
 from aioalfacrm import fields
 from typing import Optional
 
 
 # Extend existing model
-class CustomCustomer(Customer):
+class CustomCustomer(entities.Customer):
     custom_field: Optional[int] = fields.Integer()
 
     # For IDE init support
@@ -124,7 +104,7 @@ class CustomCustomer(Customer):
 
 # Create custom alfa client with new model
 from aioalfacrm import AlfaClient
-from aioalfacrm.managers import Customer
+from aioalfacrm import managers
 
 
 class CustomAlfaClient(AlfaClient):
@@ -132,9 +112,9 @@ class CustomAlfaClient(AlfaClient):
     def __init__(self, *args, **kwargs):
         super(CustomAlfaClient, self).__init__(*args, **kwargs)
 
-        self.customer = Customer(
+        self.customer = managers.Customer(
             api_client=self.api_client,
-            model_class=CustomCustomer
+            entity_class=CustomCustomer,
         )
 
 

@@ -41,9 +41,9 @@ def test_check_error_response():
 
 def test_check_bad_request_response():
     with pytest.raises(ApiException) as exc:
-        check_response(400, json.dumps({"errors": ["First error"]}))
+        check_response(200, json.dumps({"errors": ["First error"]}))
     assert exc.value._message == ["First error"]
-    assert exc.value._code == 400
+    assert exc.value._code == 200
 
 
 def test_prepare_dict():
