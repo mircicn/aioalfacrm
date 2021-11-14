@@ -3,7 +3,7 @@ from aioalfacrm.entities import StudyStatus
 
 def test_init_study_status():
     study_status = StudyStatus(
-        id_=1,
+        id=1,
         name='name',
         is_enabled=False,
         weight=3,

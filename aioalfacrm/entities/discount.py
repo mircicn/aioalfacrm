@@ -6,7 +6,6 @@ from ..core import AlfaEntity
 
 
 class Discount(AlfaEntity):
-    id: Optional[int] = fields.Integer()
     branch_id: Optional[int] = fields.Integer()
     customer_id: Optional[int] = fields.Integer()
     discount_type: Optional[int] = fields.Integer()
@@ -19,7 +18,6 @@ class Discount(AlfaEntity):
 
     def __init__(
             self,
-            id_: Optional[int] = None,
             branch_id: Optional[int] = None,
             customer_id: Optional[int] = None,
             discount_type: Optional[int] = None,
@@ -32,7 +30,6 @@ class Discount(AlfaEntity):
             **kwargs,
     ):
         super().__init__(
-            id=id_,
             branch_id=branch_id,
             customer_id=customer_id,
             discount_type=discount_type,

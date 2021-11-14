@@ -3,7 +3,7 @@ from aioalfacrm.entities import PayItemCategory
 
 def test_pay_item_category():
     pay_item_category = PayItemCategory(
-        id_=1,
+        id=1,
         name='Name',
         weight=3,
     )

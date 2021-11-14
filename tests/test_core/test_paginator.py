@@ -1,47 +1,23 @@
 from typing import Optional, List
 
-import aiohttp
 import pytest
 
 from aioalfacrm import fields
-from aioalfacrm.core import AlfaEntity, EntityManager, Paginator, Page, AuthManager, ApiClient
+from aioalfacrm.core import EntityManager, Paginator, Page
+from aioalfacrm.core.entity import BaseAlfaEntity
 
 
-class TestCRUDAlfaObject(EntityManager):
+class EntityManagerClass(EntityManager):
     object_name = 'customer'
 
 
-class TestModel(AlfaEntity):
+class BaseAlfaEntityClass(BaseAlfaEntity):
     id: Optional[int] = fields.Integer()
     field1: Optional[int] = fields.Integer()
-
-    def __init__(self, id_: Optional[int] = None, field1: Optional[int] = None):
-        super(TestModel, self).__init__(field1=field1, id=id_)
 
 
 def add_auth_request(aresponses):
     aresponses.add('demo.s20.online', '/v2api/auth/login', 'POST', {'token': 'api-token'})
-
-
-@pytest.fixture
-def auth_manager():
-    session = aiohttp.ClientSession()
-    return AuthManager(
-        email='test@test.test',
-        api_key='api-key',
-        hostname='demo.s20.online',
-        session=session,
-    )
-
-
-@pytest.fixture
-def api_client(auth_manager: AuthManager):
-    return ApiClient(
-        hostname='demo.s20.online',
-        branch_id=1,
-        auth_manager=auth_manager,
-        session=auth_manager._session,  # noqa
-    )
 
 
 def test_init_page():
@@ -57,18 +33,18 @@ def test_init_page():
 
 
 def test_init_paginator(aresponses, api_client):
-    crud_object = TestCRUDAlfaObject(
+    manager = EntityManagerClass(
         api_client,
-        entity_class=TestModel,
+        entity_class=BaseAlfaEntityClass,
     )
 
     paginator = Paginator(
-        alfa_object=crud_object,
+        alfa_object=manager,
         start_page=0,
         page_size=20,
     )
 
-    assert paginator._object == crud_object
+    assert paginator._object == manager
     assert paginator._page_number == 0
     assert paginator._page_size == 20
     assert paginator._page is None
@@ -94,17 +70,17 @@ async def test_paginator(aresponses, api_client):
         body_pattern='{"page": 2}'
     )
 
-    crud_object = TestCRUDAlfaObject(
+    crud_object = EntityManagerClass(
         api_client,
-        entity_class=TestModel,
+        entity_class=BaseAlfaEntityClass,
     )
 
-    paginator: Paginator[TestModel] = Paginator(
+    paginator: Paginator[BaseAlfaEntityClass] = Paginator(
         alfa_object=crud_object,
         start_page=0,
         page_size=1,
     )
-    all_pages: List[Page[TestModel]] = []
+    all_pages: List[Page[BaseAlfaEntityClass]] = []
     async for page in paginator:
         all_pages.append(page)
 
@@ -113,12 +89,12 @@ async def test_paginator(aresponses, api_client):
     assert len(all_pages) == 3
     assert all_pages[0].total == 3
     assert all_pages[0].number == 0
-    assert all_pages[0].items == [TestModel(id_=1, field1=1)]
+    assert all_pages[0].items == [BaseAlfaEntityClass(id=1, field1=1)]
 
     assert all_pages[1].total == 3
     assert all_pages[1].number == 1
-    assert all_pages[1].items == [TestModel(id_=2, field1=2)]
+    assert all_pages[1].items == [BaseAlfaEntityClass(id=2, field1=2)]
 
     assert all_pages[2].total == 3
     assert all_pages[2].number == 2
-    assert all_pages[2].items == [TestModel(id_=3, field1=3)]
+    assert all_pages[2].items == [BaseAlfaEntityClass(id=3, field1=3)]

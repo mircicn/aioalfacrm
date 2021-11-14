@@ -6,7 +6,6 @@ from ..core import AlfaEntity
 
 
 class Customer(AlfaEntity):
-    id: Optional[int] = fields.Integer()
     name: Optional[str] = fields.String()
     branch_ids: Optional[List[int]] = fields.ListField(fields.Integer())
     teacher_ids: Optional[List[int]] = fields.ListField(fields.Integer())
@@ -40,7 +39,6 @@ class Customer(AlfaEntity):
 
     def __init__(
             self,
-            id_: Optional[int] = None,
             name: Optional[str] = None,
             branch_ids: Optional[List[int]] = None,
             teacher_ids: Optional[List[int]] = None,
@@ -73,7 +71,6 @@ class Customer(AlfaEntity):
             **kwargs,
     ):
         super(Customer, self).__init__(
-            id=id_,
             name=name,
             branch_ids=branch_ids,
             teacher_ids=teacher_ids,

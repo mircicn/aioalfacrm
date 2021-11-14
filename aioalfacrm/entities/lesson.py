@@ -6,7 +6,6 @@ from ..core import AlfaEntity
 
 
 class Lesson(AlfaEntity):
-    id: Optional[int] = fields.Integer()
     branch_id: Optional[int] = fields.Integer()
     date: Optional[datetime.date] = fields.DateField()
     time_from: Optional[datetime.datetime] = fields.DateTimeField()
@@ -23,7 +22,6 @@ class Lesson(AlfaEntity):
 
     def __init__(
             self,
-            id_: Optional[int] = None,
             branch_id: Optional[int] = None,
             date: Optional[datetime.date] = None,
             time_from: Optional[datetime.datetime] = None,
@@ -40,7 +38,6 @@ class Lesson(AlfaEntity):
             **kwargs,
     ):
         super().__init__(
-            id=id_,
             branch_id=branch_id,
             date=date,
             time_from=time_from,

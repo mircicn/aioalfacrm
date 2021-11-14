@@ -3,7 +3,7 @@ from aioalfacrm.entities import LeadReject
 
 def test_init_lead_reject():
     lead_reject = LeadReject(
-        id_=1,
+        id=1,
         name='Name',
         is_enabled=True,
         weight=0,

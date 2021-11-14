@@ -5,7 +5,7 @@ from aioalfacrm.entities import Communication
 
 def test_init_communication():
     communication = Communication(
-        id_=1,
+        id=1,
         type_id=2,
         related_id=3,
         user_id=4,

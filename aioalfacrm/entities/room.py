@@ -5,7 +5,6 @@ from ..core.entity import AlfaEntity
 
 
 class Room(AlfaEntity):
-    id: Optional[int] = fields.Integer()
     branch_id: Optional[int] = fields.Integer()
     location_id: Optional[int] = fields.Integer()
     streaming_id: Optional[int] = fields.Integer()
@@ -17,7 +16,6 @@ class Room(AlfaEntity):
 
     def __init__(
             self,
-            id_: Optional[int] = None,
             branch_id: Optional[int] = None,
             location_id: Optional[int] = None,
             streaming_id: Optional[int] = None,
@@ -29,7 +27,6 @@ class Room(AlfaEntity):
             **kwargs
     ):
         super().__init__(
-            id=id_,
             branch_id=branch_id,
             location_id=location_id,
             streaming_id=streaming_id,

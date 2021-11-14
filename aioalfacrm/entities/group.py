@@ -6,7 +6,6 @@ from ..core.entity import AlfaEntity
 
 
 class Group(AlfaEntity):
-    id: Optional[int] = fields.Integer()
     branch_ids: Optional[List[int]] = fields.ListField(fields.Integer())
     teacher_ids: Optional[List[int]] = fields.ListField(fields.Integer())
     name: Optional[str] = fields.String()
@@ -20,7 +19,6 @@ class Group(AlfaEntity):
     e_date: Optional[datetime.date] = fields.DateField()
 
     def __init__(self,
-                 id_: Optional[int] = None,
                  branch_ids: Optional[List[int]] = None,
                  teacher_ids: Optional[List[int]] = None,
                  name: Optional[str] = None,
@@ -36,7 +34,6 @@ class Group(AlfaEntity):
                  ):
         print(locals())
         super().__init__(
-            id=id_,
             branch_ids=branch_ids,
             teacher_ids=teacher_ids,
             name=name,

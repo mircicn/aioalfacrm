@@ -3,7 +3,7 @@ from aioalfacrm.entities import Room
 
 def test_init_room():
     room = Room(
-        id_=1,
+        id=1,
         branch_id=2,
         location_id=3,
         streaming_id=4,

@@ -6,7 +6,6 @@ from ..core import AlfaEntity
 
 
 class Tariff(AlfaEntity):
-    id: Optional[int] = fields.Integer()
     tariff_type: Optional[int] = fields.Integer(alias='type')
     name: Optional[str] = fields.String()
     price: Optional[float] = fields.Float()
@@ -17,7 +16,6 @@ class Tariff(AlfaEntity):
 
     def __init__(
             self,
-            id_: Optional[int] = None,
             tariff_type: Optional[int] = None,
             name: Optional[str] = None,
             price: Optional[float] = None,
@@ -28,7 +26,6 @@ class Tariff(AlfaEntity):
             **kwargs,
     ):
         super().__init__(
-            id=id_,
             tariff_type=tariff_type,
             name=name,
             price=price,

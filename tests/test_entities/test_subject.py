@@ -3,7 +3,7 @@ from aioalfacrm.entities import Subject
 
 def test_inif_subject():
     subject = Subject(
-        id_=1,
+        id=1,
         name='name',
         weight=4,
     )

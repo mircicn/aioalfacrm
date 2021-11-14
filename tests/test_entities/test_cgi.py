@@ -5,7 +5,7 @@ from aioalfacrm.entities import CGI
 
 def test_init_cgi():
     cgi = CGI(
-        id_=1,
+        id=1,
         customer_id=2,
         group_id=3,
         b_date=datetime.date(2021, 1, 1),

@@ -3,7 +3,7 @@ from aioalfacrm.entities import LessonType
 
 def test_init_lesson_type():
     lesson_type = LessonType(
-        id_=1,
+        id=1,
         name='Name',
         type=2,
         icon='icon',

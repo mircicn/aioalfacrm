@@ -5,7 +5,6 @@ from ..core import AlfaEntity
 
 
 class LessonType(AlfaEntity):
-    id: Optional[int] = fields.Integer()
     name: Optional[str] = fields.String()
     lesson_type: Optional[int] = fields.Integer(alias='type')
     icon: Optional[str] = fields.String()
@@ -13,7 +12,6 @@ class LessonType(AlfaEntity):
     sort: Optional[int] = fields.Integer()
 
     def __init__(
-            self,
             id_: Optional[int] = None,
             name: Optional[str] = None,
             lesson_type: Optional[str] = None,
@@ -23,7 +21,6 @@ class LessonType(AlfaEntity):
             **kwargs
     ):
         super().__init__(
-            id=id_,
             name=name,
             lesson_type=lesson_type,
             icon=icon,

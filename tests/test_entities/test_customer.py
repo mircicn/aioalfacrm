@@ -5,7 +5,7 @@ from aioalfacrm.entities import Customer
 
 def test_init_customer():
     customer = Customer(
-        id_=1,
+        id=1,
         name='Name',
         branch_ids=[1, 2, 3],
         teacher_ids=[1],

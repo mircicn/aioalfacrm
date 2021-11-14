@@ -5,7 +5,6 @@ from ..core import AlfaEntity
 
 
 class Branch(AlfaEntity):
-    id: Optional[int] = fields.Integer()
     name: Optional[str] = fields.String()
     is_active: Optional[bool] = fields.Bool()
     subject_ids: Optional[List[int]] = fields.ListField(base=fields.Integer())
@@ -13,7 +12,6 @@ class Branch(AlfaEntity):
 
     def __init__(
             self,
-            id_: Optional[int] = None,
             name: Optional[str] = '',
             is_active: Optional[bool] = True,
             subject_ids: Optional[List[int]] = None,
@@ -21,7 +19,6 @@ class Branch(AlfaEntity):
             **kwargs,
     ):
         super(Branch, self).__init__(
-            id=id_,
             name=name,
             is_active=is_active,
             subject_ids=subject_ids,

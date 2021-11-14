@@ -1,4 +1,4 @@
-from aioalfacrm.core import AlfaEntity
+from aioalfacrm.core.entity import BaseAlfaEntity
 from aioalfacrm.fields import Integer
 
 
@@ -6,23 +6,23 @@ class AnotherClass:
     pass
 
 
-class TestClass(AlfaEntity, AnotherClass):
+class BaseAlfaClass(BaseAlfaEntity, AnotherClass):
     field1 = Integer()
     field2 = Integer(alias='field2_alias')
     field3 = Integer(default=10)
     field4 = Integer()
 
 
-class FirstClass(AlfaEntity):
+class FirstClass(BaseAlfaEntity):
     field1 = Integer()
 
 
-class SecondClass(AlfaEntity):
+class SecondClass(BaseAlfaEntity):
     field2 = Integer()
 
 
 def test_init_alfa_object():
-    a = TestClass(
+    a = BaseAlfaClass(
         field1=1,
         field2=2,
         field4=None,
@@ -32,7 +32,7 @@ def test_init_alfa_object():
 
 
 def test_alfa_object_serialize():
-    a = TestClass(
+    a = BaseAlfaClass(
         field1=1,
         field2=2,
         field4=None

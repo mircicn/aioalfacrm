@@ -5,7 +5,7 @@ from aioalfacrm.entities import Discount
 
 def test_init_discount():
     discount = Discount(
-        id_=1,
+        id=1,
         branch_id=2,
         customer_id=3,
         discount_type=4,

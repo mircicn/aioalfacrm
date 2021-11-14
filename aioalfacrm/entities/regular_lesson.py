@@ -6,7 +6,6 @@ from ..core import AlfaEntity
 
 
 class RegularLesson(AlfaEntity):
-    id: Optional[int] = fields.Integer()
     branch_id: Optional[int] = fields.Integer()
     lesson_type_id: Optional[int] = fields.Integer()
     related_class: Optional[str] = fields.String()
@@ -27,7 +26,6 @@ class RegularLesson(AlfaEntity):
 
     def __init__(
             self,
-            id_: Optional[int] = None,
             branch_id: Optional[int] = None,
             lesson_type_id: Optional[int] = None,
             related_class: Optional[str] = None,
@@ -48,7 +46,6 @@ class RegularLesson(AlfaEntity):
             **kwargs
     ):
         super().__init__(
-            id=id_,
             branch_id=branch_id,
             lesson_type_id=lesson_type_id,
             related_class=related_class,

@@ -6,7 +6,6 @@ from ..core import AlfaEntity
 
 
 class Task(AlfaEntity):
-    id: Optional[int] = fields.Integer()
     company_id: Optional[int] = fields.Integer()
     branch_ids: Optional[List[int]] = fields.ListField(fields.Integer())
     user_id: Optional[int] = fields.Integer()
@@ -27,7 +26,6 @@ class Task(AlfaEntity):
 
     def __init__(
             self,
-            id_: Optional[int] = None,
             company_id: Optional[int] = None,
             branch_ids: Optional[List[int]] = None,
             user_id: Optional[int] = None,
@@ -48,7 +46,6 @@ class Task(AlfaEntity):
             **kwargs
     ):
         super().__init__(
-            id=id_,
             company_id=company_id,
             branch_ids=branch_ids,
             user_id=user_id,

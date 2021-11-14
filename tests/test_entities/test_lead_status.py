@@ -3,7 +3,7 @@ from aioalfacrm.entities import LeadStatus
 
 def test_init_lead_status():
     lead_status = LeadStatus(
-        id_=1,
+        id=1,
         name='name',
         is_enabled=True,
         weight=2,

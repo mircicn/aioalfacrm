@@ -1,6 +1,5 @@
 from unittest.mock import patch, MagicMock
 
-import aiohttp
 import pytest
 
 from aioalfacrm.core.auth import AUTH_HEADER_FIELD
@@ -8,9 +7,7 @@ from aioalfacrm.core.auth import AuthManager
 
 
 @pytest.mark.asyncio
-async def test_init(aresponses):
-    session = aiohttp.ClientSession()
-
+async def test_init(aresponses, session):
     auth_manager = AuthManager(
         email='test@test.test',
         api_key='api-key',
@@ -27,28 +24,18 @@ async def test_init(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_refresh_token(aresponses):
+async def test_refresh_token(aresponses, auth_manager, session):
     aresponses.add('demo.s20.online', '/v2api/auth/login', 'post', {'token': 'api-token'})
-    session = aiohttp.ClientSession()
-
-    auth_manager = AuthManager(
-        email='test@test.test',
-        api_key='api-key',
-        hostname='demo.s20.online',
-        session=session,
-    )
-
     await auth_manager.refresh_token()
     assert auth_manager._token.value == 'api-token'
     await session.close()
 
 
 @pytest.mark.asyncio
-async def test_auto_refresh_token(aresponses):
+async def test_auto_refresh_token(aresponses, session):
     aresponses.add('auth.s20.online', '/v2api/auth/login', 'post', {'token': 'first-api-token'})
     aresponses.add('auth.s20.online', '/v2api/auth/login', 'post', {'token': 'second-api-token'})
 
-    session = aiohttp.ClientSession()
     auth_manager = AuthManager(
         email='test@test.test',
         api_key='api-key',
@@ -70,16 +57,8 @@ async def test_auto_refresh_token(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_get_auth_headers(aresponses):
+async def test_get_auth_headers(aresponses, auth_manager):
     aresponses.add('demo.s20.online', '/v2api/auth/login', 'post', {'token': 'api-token'})
-
-    session = aiohttp.ClientSession()
-    auth_manager = AuthManager(
-        email='test@test.test',
-        api_key='api-key',
-        hostname='demo.s20.online',
-        session=session,
-    )
 
     await auth_manager.refresh_token()
 

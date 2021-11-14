@@ -5,7 +5,6 @@ from ..core import AlfaEntity
 
 
 class PayAccount(AlfaEntity):
-    id: Optional[int] = fields.Integer()
     branch_id: Optional[int] = fields.Integer()
     name: Optional[str] = fields.String()
     user_ids: Optional[List[int]] = fields.ListField(fields.Integer())
@@ -14,7 +13,6 @@ class PayAccount(AlfaEntity):
 
     def __init__(
             self,
-            id_: Optional[int] = None,
             branch_id: Optional[int] = None,
             name: Optional[str] = None,
             user_ids: Optional[List[int]] = None,
@@ -23,7 +21,6 @@ class PayAccount(AlfaEntity):
             **kwargs
     ):
         super().__init__(
-            id=id_,
             branch_id=branch_id,
             name=name,
             user_ids=user_ids,

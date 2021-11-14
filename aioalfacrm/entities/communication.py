@@ -6,7 +6,6 @@ from ..core import AlfaEntity
 
 
 class Communication(AlfaEntity):
-    id: Optional[int] = fields.Integer()
     type_id: Optional[int] = fields.Integer()
     related_class: Optional[str] = fields.String(alias='class')
     related_id: Optional[int] = fields.Integer()
@@ -16,7 +15,6 @@ class Communication(AlfaEntity):
 
     def __init__(
             self,
-            id_: Optional[int] = None,
             type_id: Optional[int] = None,
             related_class: Optional[str] = None,
             related_id: Optional[int] = None,
@@ -26,7 +24,6 @@ class Communication(AlfaEntity):
             **kwargs,
     ):
         super().__init__(
-            id=id_,
             type_id=type_id,
             related_class=related_class,
             related_id=related_id,

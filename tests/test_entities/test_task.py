@@ -5,7 +5,7 @@ from aioalfacrm.entities import Task
 
 def test_init_task():
     task = Task(
-        id_=1,
+        id=1,
         company_id=2,
         branch_ids=[1, 2],
         user_id=3,

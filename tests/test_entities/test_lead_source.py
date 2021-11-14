@@ -3,7 +3,7 @@ from aioalfacrm.entities import LeadSource
 
 def test_init_lead_source():
     lead_source = LeadSource(
-        id_=1,
+        id=1,
         code='123',
         name='name',
         is_enabled=True,

@@ -5,7 +5,7 @@ from aioalfacrm.entities import Tariff
 
 def test_init_tariff():
     tariff = Tariff(
-        id_=1,
+        id=1,
         type=1,
         name='Name',
         price=9.0,

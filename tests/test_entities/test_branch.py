@@ -3,7 +3,7 @@ from aioalfacrm.entities import Branch
 
 def test_init_branch():
     branch = Branch(
-        id_=1,
+        id=1,
         name='First branch',
         is_active=True,
         subject_ids=[1, 2, 3],

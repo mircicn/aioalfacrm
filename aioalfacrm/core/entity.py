@@ -1,6 +1,7 @@
 import typing
 
 from .field import BaseField
+from ..fields.integer import Integer
 
 T = typing.TypeVar('T')
 
@@ -37,7 +38,7 @@ class AlfaEntityMeta(type):
         return cls
 
 
-class AlfaEntity(metaclass=AlfaEntityMeta):
+class BaseAlfaEntity(metaclass=AlfaEntityMeta):
     def __init__(self, **kwargs):
 
         for key, value in kwargs.items():
@@ -93,5 +94,9 @@ class AlfaEntity(metaclass=AlfaEntityMeta):
             result[self.props_aliases.get(name, name)] = value
         return result
 
-    def __eq__(self, other: 'AlfaEntity') -> bool:
+    def __eq__(self, other: 'BaseAlfaEntity') -> bool:
         return self.serialize() == other.serialize() and self.__class__ == other.__class__
+
+
+class AlfaEntity(BaseAlfaEntity):
+    id: typing.Optional[int] = Integer()

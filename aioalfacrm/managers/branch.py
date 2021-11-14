@@ -27,5 +27,5 @@ class Branch(EntityManager, typing.Generic[T]):
         :param kwargs: additional filters
         :return: list of branches
         """
-        row_data = await self._list(page, count, name=name, is_active=is_active, subject_ids=subject_ids, **kwargs)
-        return [self._entity_class(id_=item.pop('id'), **item) for item in row_data['items']]
+        result = await self._list(page, count, name=name, is_active=is_active, subject_ids=subject_ids, **kwargs)
+        return self._result_to_entities(result)

@@ -6,19 +6,7 @@ import pytest
 from aioalfacrm.core import ApiClient, AuthManager
 
 
-@pytest.fixture
-def auth_manager():
-    session = aiohttp.ClientSession()
-    return AuthManager(
-        email='test@test.test',
-        api_key='api-key',
-        hostname='demo.s20.online',
-        session=session,
-    )
-
-
-def test_init_api_client(auth_manager: AuthManager):
-    session = aiohttp.ClientSession()
+def test_init_api_client(auth_manager: AuthManager, session):
     api_client = ApiClient(
         hostname='demo.s20.online',
         branch_id=1,
@@ -45,9 +33,9 @@ def test_get_url_for_method(
         branch_id: Optional[int],
         object_name: str,
         method: str,
-        result: str
+        result: str,
+        session
 ):
-    session = aiohttp.ClientSession()
     api_client = ApiClient(
         hostname=hostname,
         branch_id=branch_id,
@@ -59,12 +47,11 @@ def test_get_url_for_method(
 
 
 @pytest.mark.asyncio
-async def test_request(aresponses, auth_manager):
+async def test_request(aresponses, auth_manager, session):
     aresponses.add('demo.s20.online', '/v2api/auth/login', 'POST', {'token': 'api-token'})
     aresponses.add('demo.s20.online', '/v2api/1/location/index',
                    'POST', {'message': 'ok'}, body_pattern='{"param2": 2}')
 
-    session = aiohttp.ClientSession()
     api_client = ApiClient(
         hostname='demo.s20.online',
         branch_id=1,

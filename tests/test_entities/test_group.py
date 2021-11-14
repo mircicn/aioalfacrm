@@ -5,7 +5,7 @@ from aioalfacrm.entities import Group
 
 def test_init_group():
     group = Group(
-        id_=1,
+        id=1,
         branch_ids=[],
         teacher_ids=[1],
         name='Name',

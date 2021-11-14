@@ -3,7 +3,7 @@ from aioalfacrm.entities import PayItem
 
 def test_init_pay_item():
     pay_item = PayItem(
-        id_=1,
+        id=1,
         branch_ids=[1, 2],
         category_id=1,
         pay_type_ids=[2, 3],

@@ -23,7 +23,7 @@ class BaseManager:
         params = prepare_dict(params)
 
         if api_method == ApiMethod.LIST:
-            params['per-page'] = json.get('count', 100)
+            params['per-page'] = json.pop('count', 100)
 
         json = prepare_dict(json)
         url = self._api_client.get_url_for_method(self.object_name, api_method.value)
@@ -47,6 +47,7 @@ class BaseManager:
         payload = {
             'page': page,
             **kwargs,
+            'count': count,
         }
         return await self._get_result(
             params=params,
@@ -142,7 +143,7 @@ class EntityManager(BaseManager, typing.Generic[T]):
             count,
             **kwargs
         )
-        return self._result_to_list_entities(raw_data)
+        return self._result_to_entities(raw_data)
 
     async def get(
             self,
@@ -175,7 +176,7 @@ class EntityManager(BaseManager, typing.Generic[T]):
             count,
             **kwargs
         )
-        items = self._result_to_list_entities(raw_data)
+        items = self._result_to_entities(raw_data)
         return Page(
             number=page,
             items=items,
@@ -195,8 +196,8 @@ class EntityManager(BaseManager, typing.Generic[T]):
             filters=kwargs,
         )
 
-    def _result_to_list_entities(self, result: typing.Dict[str, typing.Any]) -> typing.List[T]:
-        return [self._entity_class(id_=item.pop('id'), **item) for item in result['items']]
+    def _result_to_entities(self, result: typing.Dict[str, typing.Any]) -> typing.List[T]:
+        return [self._entity_class(**item) for item in result['items']]
 
     def _result_to_entity(self, result: typing.Dict[str, typing.Any]) -> T:
-        return self._entity_class(id_=result.pop('id'), **result)
+        return self._entity_class(**result)

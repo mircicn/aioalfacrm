@@ -7,7 +7,7 @@ from aioalfacrm import fields
 from aioalfacrm.core import AlfaEntity
 
 
-class TestClass(AlfaEntity):
+class AlfaEntityClass(AlfaEntity):
     integer_field: int = fields.Integer()
     float_field: float = fields.Float()
     bool_field: bool = fields.Bool()
@@ -19,7 +19,7 @@ class TestClass(AlfaEntity):
 
 
 def test_intger_field():
-    a = TestClass()
+    a = AlfaEntityClass()
 
     a.integer_field = None
     assert a.integer_field is None
@@ -35,7 +35,7 @@ def test_intger_field():
 
 
 def test_float_field():
-    a = TestClass()
+    a = AlfaEntityClass()
     a.float_field = None
     assert a.float_field is None
     a.float_field = 10.2
@@ -50,7 +50,7 @@ def test_float_field():
 
 
 def test_bool_field():
-    a = TestClass()
+    a = AlfaEntityClass()
     a.bool_field = None
     assert a.bool_field is None
     a.bool_field = False
@@ -66,7 +66,7 @@ def test_bool_field():
 
 
 def test_string_field():
-    a = TestClass()
+    a = AlfaEntityClass()
 
     a.string_field = None
     assert a.string_field is None
@@ -77,7 +77,7 @@ def test_string_field():
 
 
 def test_date_field():
-    a = TestClass()
+    a = AlfaEntityClass()
 
     a.date_field = None
     assert a.date_field is None
@@ -99,7 +99,7 @@ def test_date_field():
 
 
 def test_datetime_field():
-    a = TestClass()
+    a = AlfaEntityClass()
 
     a.datetime_field = None
     assert a.datetime_field is None
@@ -116,7 +116,7 @@ def test_datetime_field():
 
 
 def test_list_field():
-    a = TestClass()
+    a = AlfaEntityClass()
 
     a.list_field = None
     assert a.list_field is None
@@ -130,7 +130,7 @@ def test_list_field():
 
 
 def test_time_field():
-    a = TestClass()
+    a = AlfaEntityClass()
 
     a.time_field = None
     assert a.time_field is None

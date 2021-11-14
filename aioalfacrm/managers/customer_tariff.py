@@ -18,7 +18,7 @@ class CustomerTariff(EntityManager, typing.Generic[T]):
     ) -> typing.List[T]:
         if customer_id is None:
             raise ValueError(f'customer_id is not filled')
-        raw_result = await self._list(
+        result = await self._list(
             page=page,
             count=count,
             params={
@@ -27,7 +27,7 @@ class CustomerTariff(EntityManager, typing.Generic[T]):
             **kwargs,
         )
 
-        return [self._entity_class(id_=item.pop('id'), **item) for item in raw_result['items']]
+        return self._result_to_entities(result)
 
     async def get(
             self,
@@ -37,7 +37,7 @@ class CustomerTariff(EntityManager, typing.Generic[T]):
     ) -> T:
         if customer_id is None:
             raise ValueError(f'customer_id is not filled')
-        raw_result = await self._get(
+        result = await self._get(
             id_=id_,
             params={
                 'customer_id': customer_id,
@@ -45,18 +45,18 @@ class CustomerTariff(EntityManager, typing.Generic[T]):
             **kwargs,
         )
 
-        return self._entity_class(id_=raw_result.pop('id'), **raw_result)
+        return self._result_to_entity(result)
 
     async def save(
             self,
             model: T,
             customer_id: typing.Optional[int] = None,
     ) -> T:
-        raw_result = await self._save(
+        result = await self._save(
             params={
                 'customer_id': customer_id,
             },
             **model.serialize()
         )
 
-        return self._entity_class(id_=raw_result.pop('id'), **raw_result)
+        return self._result_to_entity(result)

@@ -3,7 +3,7 @@ from aioalfacrm.entities import PayAccount
 
 def test_init_account():
     pay_account = PayAccount(
-        id_=1,
+        id=1,
         branch_id=2,
         name='Name',
         user_ids=[2],

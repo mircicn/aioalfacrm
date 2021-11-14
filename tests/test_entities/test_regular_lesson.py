@@ -5,7 +5,7 @@ from aioalfacrm.entities import RegularLesson
 
 def test_init_regular_lesson():
     regular_lesson = RegularLesson(
-        id_=1,
+        id=1,
         branch_id=2,
         lesson_type_id=3,
         related_class='Group',

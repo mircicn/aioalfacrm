@@ -3,7 +3,7 @@ from aioalfacrm.entities import Location
 
 def test_init_location():
     location = Location(
-        id_=1,
+        id=1,
         branch_id=1,
         is_active=True,
         name='name',

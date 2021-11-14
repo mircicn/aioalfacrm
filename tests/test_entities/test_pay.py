@@ -5,7 +5,7 @@ from aioalfacrm.entities import Pay
 
 def test_init_pay():
     pay = Pay(
-        id_=1,
+        id=1,
         branch_id=2,
         location_id=3,
         customer_id=4,

@@ -1,4 +1,3 @@
-import aiohttp
 import pytest
 
 try:
@@ -14,22 +13,23 @@ def add_auth_request(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_init():
+async def test_init(session):
     client = AlfaClient(
         hostname='demo.s20.online',
         email='test@test.example',
         api_key='api-key',
         branch_id=1,
+        session=session
     )
     assert client.hostname == 'demo.s20.online'
     assert client.email == 'test@test.example'
     assert client.api_key == 'api-key'
     assert client.branch_id == 1
+    assert client._session == session
 
 
 @pytest.mark.asyncio
-async def test_close():
-    session = aiohttp.ClientSession()
+async def test_close(session):
     client = AlfaClient(
         hostname='demo.s20.online',
         email='test@test.example',
@@ -44,13 +44,14 @@ async def test_close():
 
 
 @pytest.mark.asyncio
-async def test_auth(aresponses):
+async def test_auth(aresponses, session):
     add_auth_request(aresponses)
     client = AlfaClient(
         hostname='demo.s20.online',
         email='test@test.example',
         api_key='api_key',
         branch_id=1,
+        session=session,
     )
 
     await client.auth()
@@ -58,7 +59,7 @@ async def test_auth(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_correct_check_auth(aresponses):
+async def test_correct_check_auth(aresponses, session):
     aresponses.add('auth.s20.online', '/v2api/auth/login', 'POST',
                    response=aresponses.Response(
                        status=403, body="{'name': 'Forbidden', 'message': 'Not Authorized', 'code': 0, 'status': 403}"
@@ -69,19 +70,21 @@ async def test_correct_check_auth(aresponses):
         email='test@test.example',
         api_key='api_key',
         branch_id=1,
+        session=session,
     )
 
     assert await client.check_auth() is False
 
 
 @pytest.mark.asyncio
-async def test_incorrect_check_auth(aresponses):
+async def test_incorrect_check_auth(aresponses, session):
     add_auth_request(aresponses)
     client = AlfaClient(
         hostname='demo.s20.online',
         email='test@test.example',
         api_key='api_key',
         branch_id=1,
+        session=session,
     )
 
     assert await client.check_auth() is True

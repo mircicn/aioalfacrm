@@ -25,7 +25,7 @@ class LeadStatus(EntityManager, typing.Generic[T]):
         :param kwargs: additional filters
         :return: list of branches
         """
-        raw_result = await self._list(
+        result = await self._list(
             page,
             count,
             name=name,
@@ -33,4 +33,4 @@ class LeadStatus(EntityManager, typing.Generic[T]):
             **kwargs
         )
 
-        return [self._entity_class(id_=item.pop('id'), **item) for item in raw_result['items']]
+        return self._result_to_entities(result)

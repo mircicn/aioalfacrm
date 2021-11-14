@@ -6,7 +6,6 @@ from ..core import AlfaEntity
 
 
 class CustomerTariff(AlfaEntity):
-    id: Optional[int] = fields.Integer()
     customer_id: Optional[int] = fields.Integer()
     tariff_id: Optional[int] = fields.Integer()
     subject_ids: Optional[List[int]] = fields.ListField(fields.Integer())
@@ -22,7 +21,6 @@ class CustomerTariff(AlfaEntity):
 
     def __init__(
             self,
-            id_: Optional[int] = None,
             customer_id: Optional[int] = None,
             tariff_id: Optional[int] = None,
             subject_ids: Optional[List[int]] = None,
@@ -38,7 +36,6 @@ class CustomerTariff(AlfaEntity):
             **kwargs,
     ):
         super().__init__(
-            id=id_,
             customer_id=customer_id,
             tariff_id=tariff_id,
             subject_ids=subject_ids,

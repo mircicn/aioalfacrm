@@ -5,7 +5,7 @@ from aioalfacrm.entities import Lesson
 
 def test_init_lesson():
     lesson = Lesson(
-        id_=1,
+        id=1,
         branch_id=2,
         date=datetime.date(2021, 1, 1),
         time_from=datetime.datetime(2021, 1, 1, 13, 0, 0),

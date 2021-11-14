@@ -20,7 +20,7 @@ class CGI(EntityManager, typing.Generic[T]):
         if customer_id is None and group_id is None:
             raise ValueError(f'Need customer_id or group_id')
 
-        raw_result = await self._list(
+        result = await self._list(
             page=page,
             count=count,
             params={
@@ -30,7 +30,7 @@ class CGI(EntityManager, typing.Generic[T]):
             **kwargs,
         )
 
-        return [self._entity_class(id_=item.pop('id'), **item) for item in raw_result['items']]
+        return self._result_to_entities(result)
 
     async def get(
             self,
@@ -41,7 +41,7 @@ class CGI(EntityManager, typing.Generic[T]):
     ) -> T:
         if customer_id is None and group_id is None:
             raise ValueError(f'Need customer_id or group_id')
-        raw_result = await self._get(
+        result = await self._get(
             id_=id_,
             params={
                 'customer_id': customer_id,
@@ -50,4 +50,4 @@ class CGI(EntityManager, typing.Generic[T]):
             **kwargs,
         )
 
-        return self._entity_class(id_=raw_result.pop('id'), **raw_result)
+        return self._result_to_entity(result)
