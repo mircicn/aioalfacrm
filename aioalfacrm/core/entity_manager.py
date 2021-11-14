@@ -137,23 +137,32 @@ class EntityManager(BaseManager, typing.Generic[T]):
             *args,
             **kwargs
     ) -> typing.List[T]:
-        raw_data = await self._list(page, count, **kwargs)
-        return [self._entity_class(item.pop('id'), **item) for item in raw_data['items']]
+        raw_data = await self._list(
+            page,
+            count,
+            **kwargs
+        )
+        return self._result_to_list_entities(raw_data)
 
     async def get(
             self,
             id_: int,
             **kwargs,
     ) -> T:
-        raw_data = await self._get(id_, **kwargs)
-        return self._entity_class(id_=raw_data.pop('id'), **raw_data)
+        raw_data = await self._get(
+            id_,
+            **kwargs
+        )
+        return self._result_to_entity(raw_data)
 
     async def save(
             self,
             model: T,
     ) -> T:
-        raw_data = await self._save(**model.serialize())
-        return self._entity_class(id_=raw_data.pop('id'), **raw_data)
+        raw_data = await self._save(
+            **model.serialize()
+        )
+        return self._result_to_entity(raw_data)
 
     async def page(
             self,
@@ -161,8 +170,12 @@ class EntityManager(BaseManager, typing.Generic[T]):
             count: int = 100,
             **kwargs,
     ) -> Page[T]:
-        raw_data = await self._list(page, count, **kwargs)
-        items = [self._entity_class(item.pop('id'), **item) for item in raw_data['items']]
+        raw_data = await self._list(
+            page,
+            count,
+            **kwargs
+        )
+        items = self._result_to_list_entities(raw_data)
         return Page(
             number=page,
             items=items,
@@ -181,3 +194,9 @@ class EntityManager(BaseManager, typing.Generic[T]):
             page_size=page_size,
             filters=kwargs,
         )
+
+    def _result_to_list_entities(self, result: typing.Dict[str, typing.Any]) -> typing.List[T]:
+        return [self._entity_class(id_=item.pop('id'), **item) for item in result['items']]
+
+    def _result_to_entity(self, result: typing.Dict[str, typing.Any]) -> T:
+        return self._entity_class(id_=result.pop('id'), **result)
