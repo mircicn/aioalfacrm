@@ -1,5 +1,6 @@
 from .branch import Branch
 from .cgi import CGI
+from .communication import Communication
 from .customer import Customer
 from .customer_tariff import CustomerTariff
 from .discount import Discount
