@@ -39,8 +39,14 @@ def check_response(
         json_response = json_.loads(body)
     except ValueError:
         json_response = {}
+    is_ok = True
 
-    if code >= 400:
+    if 'errors' in json_response and json_response.get('errors'):
+        is_ok = False
+    elif code >= 400:
+        is_ok = False
+
+    if not is_ok:
         raise ApiException(code, json_response.get("errors") or json_response.get("message") or body, request_info)
 
     return json_response
