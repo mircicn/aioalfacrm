@@ -44,18 +44,19 @@ async def test_close(session):
 
 
 @pytest.mark.asyncio
-async def test_auth(aresponses, session):
+async def test_auth(aresponses):
     add_auth_request(aresponses)
     client = AlfaClient(
         hostname='demo.s20.online',
         email='test@test.example',
         api_key='api_key',
         branch_id=1,
-        session=session,
     )
 
     await client.auth()
     assert client.auth_manager.token.value == 'api-token'
+
+    await client.close()
 
 
 @pytest.mark.asyncio
