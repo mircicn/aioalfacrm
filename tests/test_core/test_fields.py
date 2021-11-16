@@ -1,5 +1,5 @@
 import datetime
-from typing import List
+from typing import List, Dict, Any
 
 import pytest
 
@@ -16,6 +16,7 @@ class AlfaEntityClass(AlfaEntity):
     date_field: datetime.date = fields.DateField()
     list_field: List[int] = fields.ListField(fields.Integer())
     time_field: datetime.time = fields.TimeField()
+    dict_field: Dict[str, Any] = fields.DictField()
 
 
 def test_intger_field():
@@ -154,3 +155,38 @@ def test_time_field():
 
     with pytest.raises(ValueError):
         a.time_field = 'not time string'
+
+
+def test_dict_field():
+    a = AlfaEntityClass()
+
+    a.dict_field = None
+    assert a.dict_field is None
+
+    a.dict_field = ''
+    assert a.dict_field == {}
+
+    a.dict_field = []
+    assert a.dict_field == {}
+
+    a.dict_field = {
+        'd_field1': 10,
+        'd_field2': 'value',
+    }
+
+    assert a.dict_field == {'d_field1': 10, 'd_field2': 'value'}
+
+    a.dict_field = '{"dict_field": "value"}'
+    assert a.dict_field == {'dict_field': 'value'}
+
+    assert a.props['dict_field'].export(a) == {'dict_field': 'value'}
+
+    with pytest.raises(ValueError) as context:
+        a.dict_field = "123"
+
+    assert str(context.value) == '<123> is not dict'
+
+    with pytest.raises(ValueError) as context:
+        a.dict_field = "{field"
+
+    assert str(context.value) == '<{field> is not dict'
