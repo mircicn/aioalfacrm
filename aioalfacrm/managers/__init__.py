@@ -11,6 +11,7 @@ from .lead_status import LeadStatus
 from .lesson import Lesson
 from .lesson_type import LessonType
 from .location import Location
+from .log import Log
 from .pay import Pay
 from .pay_account import PayAccount
 from .pay_item import PayItem
