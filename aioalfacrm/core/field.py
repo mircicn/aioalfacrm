@@ -1,5 +1,6 @@
 import abc
 import typing
+from .exceptions import FieldNotEditable
 
 
 class BaseField(metaclass=abc.ABCMeta):
@@ -7,10 +8,17 @@ class BaseField(metaclass=abc.ABCMeta):
     Base field
     """
 
-    def __init__(self, base: 'BaseField' = None, default: typing.Any = None, alias: str = None):
+    def __init__(
+            self,
+            base: 'BaseField' = None,
+            default: typing.Any = None,
+            alias: str = None,
+            editable: bool = True,
+    ):
         self.base_field = base
         self.default = default
         self.alias = alias
+        self.editable = editable
 
     def __set_name__(self, owner, name):
         if self.alias is None:
@@ -24,6 +32,9 @@ class BaseField(metaclass=abc.ABCMeta):
         return instance.values.get(self.alias, self.default)
 
     def __set__(self, instance, value: typing.Any):
+        if not self.editable:
+            raise FieldNotEditable(code=0, message=f'<{self.alias}> is not editable')
+
         self.set_value(instance, value)
 
     def __get__(self, instance, owner: typing.Any):
