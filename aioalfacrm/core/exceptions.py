@@ -11,6 +11,10 @@ class AlfaException(Exception):
         return f'Code: {self._code} - {self._message}'
 
 
+class FieldNotEditable(AlfaException):
+    pass
+
+
 class ApiException(AlfaException):
     def __init__(self, code: int, message: str, request_info: aiohttp.RequestInfo):
         super(ApiException, self).__init__(code, message)

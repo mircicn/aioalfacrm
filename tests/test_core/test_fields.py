@@ -5,6 +5,7 @@ import pytest
 
 from aioalfacrm import fields
 from aioalfacrm.core import AlfaEntity
+from aioalfacrm.core.exceptions import FieldNotEditable
 
 
 class AlfaEntityClass(AlfaEntity):
@@ -17,6 +18,7 @@ class AlfaEntityClass(AlfaEntity):
     list_field: List[int] = fields.ListField(fields.Integer())
     time_field: datetime.time = fields.TimeField()
     dict_field: Dict[str, Any] = fields.DictField()
+    not_editable_field: int = fields.Integer(editable=False)
 
 
 def test_intger_field():
@@ -190,3 +192,16 @@ def test_dict_field():
         a.dict_field = "{field"
 
     assert str(context.value) == '<{field> is not dict'
+
+
+def test_not_editable_field():
+    a = AlfaEntityClass(
+        not_editable_field=2,
+    )
+
+    assert a.not_editable_field == 2
+
+    with pytest.raises(FieldNotEditable) as context:
+        a.not_editable_field = 4
+
+    assert str(context.value) == 'Code: 0 - <not_editable_field> is not editable'
