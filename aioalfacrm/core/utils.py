@@ -3,7 +3,7 @@ import typing
 
 import aiohttp
 
-from .exceptions import ApiException
+from .exceptions import ApiException, NotFound, Forbidden, BadRequest, MethodNotAllowed, Unauthorized
 
 
 def make_url(hostname: str, api_method: str, branch_id: int = 0) -> str:
@@ -33,7 +33,7 @@ def check_response(
     :return: checked response
     """
     if code >= 500:
-        raise ApiException(code, body, request_info)
+        raise ApiException(message=body, request_info=request_info)
 
     try:
         json_response = json_.loads(body)
@@ -42,12 +42,18 @@ def check_response(
     is_ok = True
 
     if 'errors' in json_response and json_response.get('errors'):
-        is_ok = False
-    elif code >= 400:
-        is_ok = False
+        code = 400
 
-    if not is_ok:
-        raise ApiException(code, json_response.get("errors") or json_response.get("message") or body, request_info)
+    error_msg = json_response.get("errors") or json_response.get("message") or body
+
+    if code == 400:
+        raise BadRequest(request_info=request_info, message=error_msg)
+    if code == 401:
+        raise Unauthorized(request_info=request_info, message=error_msg)
+    if code == 403:
+        raise Forbidden(request_info=request_info, message=error_msg)
+    if code == 404:
+        raise NotFound(request_info=request_info, message=error_msg)
 
     return json_response
 

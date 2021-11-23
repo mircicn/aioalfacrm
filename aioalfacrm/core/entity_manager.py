@@ -73,7 +73,7 @@ class BaseManager:
             api_method=ApiMethod.LIST,
         )
         if result['count'] == 0:
-            raise NotFound(404, f'{self.object_name} not found')
+            raise NotFound(message=f'{self.object_name} not found')
         return result['items'][0]
 
     async def _create(

@@ -33,7 +33,7 @@ class BaseField(metaclass=abc.ABCMeta):
 
     def __set__(self, instance, value: typing.Any):
         if not self.editable:
-            raise FieldNotEditable(code=0, message=f'<{self.alias}> is not editable')
+            raise FieldNotEditable(message=f'<{self.alias}> is not editable')
 
         self.set_value(instance, value)
 
