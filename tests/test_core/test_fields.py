@@ -21,7 +21,7 @@ class AlfaEntityClass(AlfaEntity):
     not_editable_field: int = fields.Integer(editable=False)
 
 
-def test_intger_field():
+def test_integer_field():
     a = AlfaEntityClass()
 
     a.integer_field = None
@@ -204,4 +204,4 @@ def test_not_editable_field():
     with pytest.raises(FieldNotEditable) as context:
         a.not_editable_field = 4
 
-    assert str(context.value) == 'Code: 0 - <not_editable_field> is not editable'
+    assert str(context.value) == '<not_editable_field> is not editable'

@@ -1,28 +1,51 @@
+from typing import Optional
+
 import aiohttp
 
 
-class AlfaException(Exception):
+class AioAlfaException(Exception):
 
-    def __init__(self, code: int, message: str) -> None:
-        self._code = code
+    def __init__(self, message: str):
         self._message = message
 
-    def __str__(self):
-        return f'Code: {self._code} - {self._message}'
+    def __str__(self) -> str:
+        return self._message
 
 
-class FieldNotEditable(AlfaException):
+class FieldNotEditable(AioAlfaException):
     pass
 
 
-class ApiException(AlfaException):
-    def __init__(self, code: int, message: str, request_info: aiohttp.RequestInfo):
-        super(ApiException, self).__init__(code, message)
+class ApiException(AioAlfaException):
+    code = 500
+
+    def __init__(
+            self,
+            request_info: Optional[aiohttp.RequestInfo] = None,
+            **kwargs):
+        super(ApiException, self).__init__(**kwargs)
         self._request_info = request_info
 
     def __str__(self):
-        return f'Code: {self._code} - {self._message} {self._request_info}'
+        request_info_msg = str(self._request_info) if self._request_info else ''
+        return f'Code: {self.code} - {self._message} {request_info_msg}'
 
 
-class NotFound(AlfaException):
-    pass
+class NotFound(ApiException):
+    code = 404
+
+
+class BadRequest(ApiException):
+    code = 400
+
+
+class Unauthorized(ApiException):
+    code = 401
+
+
+class Forbidden(ApiException):
+    code = 403
+
+
+class MethodNotAllowed(ApiException):
+    code = 405

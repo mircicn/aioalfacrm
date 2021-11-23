@@ -6,7 +6,7 @@ from . import entities
 from . import managers
 from .core.api import ApiClient
 from .core.auth import AuthManager
-from .core.exceptions import ApiException
+from .core.exceptions import Forbidden
 
 
 class AlfaClient:
@@ -87,7 +87,7 @@ class AlfaClient:
         try:
             await self.auth()
             return True
-        except ApiException:
+        except Forbidden:
             return False
 
     async def close(self):
