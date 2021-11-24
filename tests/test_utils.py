@@ -3,7 +3,7 @@ import json
 import pytest
 
 from aioalfacrm.core.exceptions import ApiException, NotFound, BadRequest, Forbidden, Unauthorized
-from aioalfacrm.core.utils import make_url, check_response, prepare_dict
+from aioalfacrm.core.utils import make_url, check_response, prepare_dict, parse_hostname
 
 
 @pytest.mark.parametrize(
@@ -63,3 +63,25 @@ def test_prepare_dict():
 
     prepared_dict = prepare_dict({'name': None, 'name2': None})
     assert prepared_dict == {}
+
+
+@pytest.mark.parametrize(
+    ['raw_hostname', 'result_hostname'],
+    [
+        ('https://hostname.s20.online', 'hostname.s20.online'),
+        ('hostname.s20.online', 'hostname.s20.online'),
+        ('hostname', 'hostname.s20.online'),
+        ('https://hostname.s20.online/api/20_', 'hostname.s20.online'),
+    ]
+)
+def test_parse_hostname(raw_hostname: str, result_hostname: str):
+    parsed_hostname = parse_hostname(raw_hostname)
+    assert parsed_hostname == result_hostname
+
+
+def test_not_valid_hostname():
+    raw_hostname = f'not.valid_hostname'
+    with pytest.raises(ValueError) as context:
+        parse_hostname(raw_hostname)
+
+    assert str(context.value) == f'<not.valid_hostname> is not valid AlfaCRM hostname'

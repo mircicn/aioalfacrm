@@ -2,8 +2,10 @@ import json as json_
 import typing
 
 import aiohttp
-
+import re
 from .exceptions import ApiException, NotFound, Forbidden, BadRequest, MethodNotAllowed, Unauthorized
+
+HOSTNAME_REGEX = re.compile(r'^(?:https://|http://)?([\w]*)(?:\.s20\.online)?[\w/0_-]*$')
 
 
 def make_url(hostname: str, api_method: str, branch_id: int = 0) -> str:
@@ -73,3 +75,27 @@ def prepare_dict(
         dict_ = {name: value for name, value in dict_.items() if value is not None}
 
     return dict_
+
+
+def parse_hostname(
+        raw_hostname: str,
+) -> str:
+    """
+    Parse hostname from raw string
+
+    Examples:
+    https://hostname.s20.online -> hostname.s20.online
+    hostname.s20.online -> hostname.s20.online
+    https://hostname.s20.online/ -> hostname.s20.online
+    hostname -> hostname.s20.online
+    https://hostname.s20.online/api/* -> hostname.s20.online
+
+    :param raw_hostname: raw hostname string
+    :return: parsed hostname
+    """
+    result = HOSTNAME_REGEX.search(raw_hostname)
+    if not result:
+        raise ValueError(f'<{raw_hostname}> is not valid AlfaCRM hostname')
+
+    base_hostname = result.group(1)
+    return f'{base_hostname}.s20.online'
