@@ -7,6 +7,7 @@ from . import managers
 from .core.api import ApiClient
 from .core.auth import AuthManager
 from .core.exceptions import Forbidden
+from .core.utils import parse_hostname
 
 
 class AlfaClient:
@@ -26,7 +27,7 @@ class AlfaClient:
         if session is None:
             session = self._create_session()
 
-        self._hostname = hostname
+        self._hostname = parse_hostname(hostname)
         self._branch_id = branch_id
         self._session = session
         self._email = email
