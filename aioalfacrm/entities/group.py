@@ -7,7 +7,7 @@ from ..core.entity import AlfaEntity
 
 class Group(AlfaEntity):
     branch_ids: Optional[List[int]] = fields.ListField(fields.Integer())
-    teacher_ids: Optional[List[int]] = fields.ListField(fields.Integer())
+    teacher_ids: Optional[List[int]] = fields.ListField(fields.String())
     name: Optional[str] = fields.String()
     level_id: Optional[int] = fields.Integer()
     status_id: Optional[int] = fields.Integer()
